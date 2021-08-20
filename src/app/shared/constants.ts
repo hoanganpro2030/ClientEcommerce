@@ -1,0 +1,12 @@
+export const BACK_END_URL = "http://127.0.0.1:8080";
+export const PROJECT_ENDPOINT = "/project";
+export const GET_ALL = "/list";
+export const SEARCH = "/search";
+export const TEXT_PARAM = "searchText=";
+export const STATUS_PARAM = "searchStatus=";
+export const DELETE = "/delete";
+export const DELETE_MANY = "/delete-multi";
+export const CREATE = "/create";
+export const GROUP_ENDPOINT = "/group";
+export const UPDATE = "/update";
+export const SUCCESS_CODE = 200;

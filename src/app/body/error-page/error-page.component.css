@@ -1,0 +1,30 @@
+.fa-times-circle {
+  font-size: 300px;
+  color: orangered;
+}
+
+span {
+  font-size: 30px;
+  font-family: "Segoe UI";
+  font-weight: 700;
+  color: #6f6f6f;
+}
+
+.red-text {
+  color: #c10202;
+}
+
+.blue-text {
+  color: #2F85FA;
+}
+
+.my-wrapper {
+  padding-top: 100px;
+  height: 100vh;
+  background-color: whitesmoke;
+}
+
+.my-text-area {
+  padding-top: 70px;
+}
+

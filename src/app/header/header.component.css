@@ -1,0 +1,35 @@
+
+.brand-name {
+  font-size: 25px;
+  font-weight: bold;
+  margin-top: 50px;
+  color: #6f6f6f;
+  padding-left: 100px;
+}
+
+.logo {
+  width: 100px;
+  padding: 20px;
+  margin-left: 150px;
+}
+
+.menu-link {
+  padding-top: 60px;
+}
+
+.blue-text {
+  color: #479be2;
+}
+
+a {
+  cursor: pointer;
+  color: darkgray;
+}
+
+.header {
+  padding-right: 20px;
+  font-weight: bold;
+  color: darkgray;
+  background-color: #f5f5f5;
+  border-bottom: #cfcfcf solid 1px;
+}

@@ -1,0 +1,78 @@
+{
+  "header": {
+    "title": "Project Information Management",
+    "help": "Help",
+    "logout": "Logout"
+  },
+  "menu": {
+    "project-list": "Projects List",
+    "new": "New",
+    "project": "Project",
+    "customer": "Customer",
+    "supplier": "Supplier"
+  },
+  "project-list": {
+    "title": "Project List",
+    "input-text": "Project number, name, customer name",
+    "input-status": "Project status",
+    "button-search": "Search Project",
+    "button-reset": "Reset Search",
+    "table": {
+      "number": "Number",
+      "name": "Name",
+      "status": "Status",
+      "customer": "Customer",
+      "start-date": "Start Date",
+      "delete": "Delete",
+      "count-check": "items selected",
+      "del-sel": "delete seleted items"
+    }
+  },
+  "project": {
+    "title-new": "New Project",
+    "title-edit": "Edit Project",
+    "number": "Project Number",
+    "name": "Project Name",
+    "customer": "Customer",
+    "group": "Group",
+    "members": "Members",
+    "status": "Status",
+    "start-date": "Start date",
+    "end-date": "End date",
+    "btn-cancel": "Cancel",
+    "btn-create": "Create Project",
+    "btn-edit": "Edit Project"
+  },
+  "error": {
+    "unexpected": "Unexpected error occurred.",
+    "please": "Please",
+    "contact": "contact your administrator",
+    "or": "or",
+    "backto": "back to search project",
+    "enter-null-field": "Please enter all the mandatory fields (*)",
+    "number-existed": "The project number already existed. Please select a different project number",
+    "visa-not-existed": "The following visas do not exist: ",
+    "project-num-null": "The project number can't be null",
+    "project-num-inval": "The project number is invalid",
+    "project-name-null": "The project name can't be null",
+    "project-customer-null": "The project customer can't be null",
+    "project-group-null": "The project group can't be null",
+    "project-group-inval": "The project group is invalid",
+    "project-emp-inval": "The following visa does not exist: ",
+    "project-status-inval": "The project status invalid",
+    "project-start-null": "The start day can't be null",
+    "project-end-inval": "Project startDay must not be greater than the project endDate",
+    "project-del-notnew": "Only able to delete project have NEW status",
+    "project-num-change": "The project number can't be changed",
+    "project-not-found": "Project's id not found: ",
+    "project-concur-upd": "Concurrent update",
+    "project-num-existed": "The project number already existed. Please select a different project number",
+    "server-internal": "Internal server error",
+    "success-project-delete": "OK"
+  },
+  "NEW": "New",
+  "PLA": "Planned",
+  "INP": "In progress",
+  "FIN": "Finished",
+  "error.project.concur-upd": "Concurrent update"
+}

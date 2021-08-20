@@ -1,0 +1,9 @@
+<div *ngIf="!internalError" class="row">
+  <div class="col-md-3 p-0">
+    <app-menu></app-menu>
+  </div>
+  <div class="col-md-9 pl-0 pr-0">
+    <app-content></app-content>
+  </div>
+</div>
+<app-error-page *ngIf="internalError"></app-error-page>

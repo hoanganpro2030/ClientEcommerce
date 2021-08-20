@@ -1,0 +1,32 @@
+.left-menu {
+  background-color: #f5f5f5;
+  height: 100vh;
+  border-right: #cfcfcf solid 1px;
+}
+
+.left-menu a, span {
+  padding-left: 40%;
+  font-family: "Segoe UI";
+  font-weight: 500;
+}
+
+.dark {
+  color: #8a8989;
+}
+
+a.d-selected {
+  color: #353434;
+}
+
+.lable-top {
+  font-size: 18pt;
+}
+
+.row {
+  padding-top: 20px;
+}
+
+.blue-text {
+  color: #007bff;
+}
+

@@ -1,0 +1,78 @@
+{
+  "header": {
+    "title": "Gestion des informations de projet",
+    "help": "Aidez-moi",
+    "logout": "Se déconnecter"
+  },
+  "menu": {
+    "project-list": "Liste des projets",
+    "new": "Nouvelle",
+    "project": "Projet",
+    "customer": "Cliente",
+    "supplier": "Fournisseuse"
+  },
+  "project-list": {
+    "title": "Liste des projets",
+    "input-text": "Numéro de projet, nom, nom du client",
+    "input-status": "L'état du projet",
+    "button-search": "Rechercher un projet",
+    "button-reset": "Réinitialiser la recherche",
+    "table": {
+      "number": "Nombre",
+      "name": "Nom",
+      "status": "Statut",
+      "customer": "Cliente",
+      "start-date": "Date de début",
+      "delete": "Effacer",
+      "count-check": "éléments sélectionnés",
+      "del-sel": "supprimer les éléments sélectionnés"
+    }
+  },
+  "project": {
+    "title-new": "Nouveau projet",
+    "title-edit": "Modifier le projet",
+    "number": "Numéro de projet",
+    "name": "Nom du projet",
+    "customer": "Cliente",
+    "group": "Groupe",
+    "members": "Membres",
+    "status": "Statut",
+    "start-date": "Date de début",
+    "end-date": "Date de fin",
+    "btn-cancel": "Annuler",
+    "btn-create": "Créer un projet",
+    "btn-edit": "Modifier le projet"
+  },
+  "error": {
+    "unexpected": "Une erreur inattendue s'est produite.",
+    "please": "S'il vous plaît",
+    "contact": "contactez votre administrateur",
+    "or": "ou",
+    "backto": "retour à la recherche de projet",
+    "enter-null-field": "Veuillez remplir tous les champs obligatoires (*)",
+    "number-existed": "Le numéro de projet existait déjà. Veuillez sélectionner un numéro de projet différent",
+    "visa-not-existed": "Les visas suivants n'existent pas:",
+    "project-num-null": "Le numéro de projet ne peut pas être nul",
+    "project-num-inval": "Le numéro de projet n'est pas valide",
+    "project-name-null": "Le nom du projet ne peut pas être nul",
+    "project-customer-null": "Le client du projet ne peut pas être nul",
+    "project-group-null": "Le groupe de projets ne peut pas être nul",
+    "project-group-inval": "Le groupe de projets n'est pas valide",
+    "project-emp-inval": "Le visa suivant n'existe pas: ",
+    "project-status-inval": "Le statut du projet n'est pas valide",
+    "project-start-null": "Le jour de début ne peut pas être nul",
+    "project-end-inval": "Le début du projet ne doit pas être supérieur à la date de fin du projet",
+    "project-del-notnew": "Seul le projet peut supprimer un nouveau statut",
+    "project-num-change": "Le numéro de projet ne peut pas être modifié",
+    "project-not-found": "Identifiant du projet introuvable: ",
+    "project-concur-upd": "Mise à jour simultanée",
+    "project-num-existed": "Le numéro de projet existait déjà. Veuillez sélectionner un numéro de projet différent",
+    "server-internal": "Erreur Interne du Serveur",
+    "success-project-delete": "D'accord"
+  },
+  "NEW": "Nouvelle",
+  "PLA": "Prévue",
+  "INP": "En cours",
+  "FIN": "Finie",
+  "error.project.concur-upd": "Concurrent update"
+}
