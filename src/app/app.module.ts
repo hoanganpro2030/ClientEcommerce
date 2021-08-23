@@ -22,12 +22,15 @@ import {ErrorService} from "./services/error.service";
 import {PaginateService} from "./services/paginate.service";
 import { TagInputModule } from 'ngx-chips';
 import {EmployeeService} from "./services/employee.service";
+import {ProductService} from './services/product.service';
+import {ProductListComponent} from './body/content/product-list/product-list.component';
 
 const appRoutes: Routes = [
   {path: '', redirectTo: 'project-list', pathMatch: 'full'},
   {path: 'project-list', component: ProjectListComponent},
   {path: 'project-form', component: ProjectFormComponent},
   {path: 'project-form/:id', component: ProjectFormComponent},
+  {path: 'product-list', component: ProductListComponent},
   {path: 'error', component: ErrorPageComponent}
 ]
 
@@ -46,6 +49,7 @@ export function createTranslateLoader(http: HttpClient) {
     ProjectFormComponent,
     ProjectListComponent,
     ErrorPageComponent,
+    ProductListComponent,
   ],
   imports: [
     BrowserModule,
@@ -64,7 +68,8 @@ export function createTranslateLoader(http: HttpClient) {
     })
 
   ],
-  providers: [ProjectService, GroupService, SearchService, DatePipe, ErrorService, PaginateService, EmployeeService],
+  providers: [ProjectService, GroupService, SearchService, DatePipe, ErrorService,
+              PaginateService, EmployeeService, ProductService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

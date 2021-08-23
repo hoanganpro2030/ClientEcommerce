@@ -14,7 +14,8 @@ import {
   SEARCH,
   STATUS_PARAM,
   TEXT_PARAM,
-  UPDATE
+  UPDATE,
+  PRODUCT_ENDPOINT
 } from "./constants";
 import {ResponseMessage} from "../model/response.message";
 import {Group} from "../model/group.model";
@@ -24,6 +25,7 @@ import {PaginateModel} from "../model/paginate.model";
 import {PaginateService} from "../services/paginate.service";
 import {Employee} from "../model/employee.model";
 import {EmployeeService} from "../services/employee.service";
+import {ProductService} from '../services/product.service';
 
 @Injectable({providedIn: 'root'})
 export class DataStorageService {
@@ -36,6 +38,7 @@ export class DataStorageService {
   public triggerBackToSearchProject: Subject<void> = new Subject<void>();
   public triggerErrorPage: Subject<any> = new Subject<any>();
   public triggerEmployeeService: Subject<any> = new Subject<any>();
+  public triggerProductService: Subject<any> = new Subject<any>();
   error: string;
 
   constructor(private http: HttpClient,
@@ -43,7 +46,8 @@ export class DataStorageService {
               private groupService: GroupService,
               private errorService: ErrorService,
               private paginateService: PaginateService,
-              private employeeService: EmployeeService) {
+              private employeeService: EmployeeService,
+              private productService: ProductService) {
   }
 
   fetchAllProjects(page) {
@@ -76,7 +80,7 @@ export class DataStorageService {
       this.triggerProjectService.next();
     }, error => {
       this.triggerResponse.next();
-    })
+    });
   }
 
   deleteMultiProject(ids: number[]) {
@@ -87,7 +91,7 @@ export class DataStorageService {
       this.triggerProjectService.next();
     }, error => {
       this.triggerResponse.next(error.error);
-    })
+    });
   }
 
   createNewProject(project) {
@@ -96,7 +100,44 @@ export class DataStorageService {
       this.triggerNavigate.next();
     }, error => {
       this.triggerResponse.next(error.error);
-    })
+    });
+  }
+
+  fetchAllProducts(page, size) {
+    return this.http.get<PaginateModel>(BACK_END_URL + PRODUCT_ENDPOINT + GET_ALL + "/" + page + "/" + size ).subscribe(response => {
+      this.productService.products = response.data;
+      this.paginateService.data = response;
+      this.triggerProductService.next();
+      this.triggerPagination.next();
+    });
+  }
+
+  deleteProducts(id: number) {
+    this.http.delete<ResponseMessage>(BACK_END_URL + PRODUCT_ENDPOINT + DELETE + "/" + id).subscribe(response => {
+      this.productService.deleteProducts(id);
+      this.triggerProductService.next();
+    }, error => {
+      this.triggerResponse.next();
+    });
+  }
+
+  createNewProduct(product) {
+    this.http.post<ResponseMessage>(BACK_END_URL + PRODUCT_ENDPOINT + CREATE, product).subscribe(response => {
+      this.triggerProductService.next();
+      this.triggerNavigate.next();
+    }, error => {
+      this.triggerResponse.next(error.error);
+    });
+  }
+
+  updateProduct(product) {
+    this.http.put<ResponseMessage>(BACK_END_URL + PRODUCT_ENDPOINT + UPDATE, product).subscribe(response => {
+      this.triggerProductService.next();
+      this.triggerNavigate.next();
+    }, error => {
+      this.errorService.error = error.error;
+      this.triggerResponse.next(error.error);
+    });
   }
 
   fetchAllGroup() {
@@ -104,7 +145,7 @@ export class DataStorageService {
       this.groupService.group = groups.sort((a, b) => a.groupLeader.visa.localeCompare(b.groupLeader.visa));
       this.triggerGroupService.next(groups);
     }, error => {
-    })
+    });
   }
 
   getGroupById(id: number) {
@@ -113,7 +154,7 @@ export class DataStorageService {
     }, error => {
       this.errorService.error = error.error;
       this.triggerResponse.next(error.error);
-    })
+    });
   }
 
   updateProject(project) {
@@ -124,14 +165,14 @@ export class DataStorageService {
     }, error => {
       this.errorService.error = error.error;
       this.triggerResponse.next(error.error);
-    })
+    });
   }
 
   fetchAllEmployee(){
     this.http.get<Employee[]>(BACK_END_URL + PROJECT_ENDPOINT + "/get-employee").subscribe(employees=>{
       this.employeeService.employees=employees;
       this.triggerEmployeeService.next();
-    })
+    });
   }
 
 
