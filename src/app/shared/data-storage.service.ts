@@ -26,6 +26,7 @@ import {PaginateService} from "../services/paginate.service";
 import {Employee} from "../model/employee.model";
 import {EmployeeService} from "../services/employee.service";
 import {ProductService} from '../services/product.service';
+import {Product} from '../model/product.model';
 
 @Injectable({providedIn: 'root'})
 export class DataStorageService {
@@ -39,6 +40,7 @@ export class DataStorageService {
   public triggerErrorPage: Subject<any> = new Subject<any>();
   public triggerEmployeeService: Subject<any> = new Subject<any>();
   public triggerProductService: Subject<any> = new Subject<any>();
+  public triggerProductEntity: Subject<Product> = new Subject<Product>();
   error: string;
 
   constructor(private http: HttpClient,
@@ -62,8 +64,8 @@ export class DataStorageService {
 
   searchProjects(searchText: string, searchStatus: string, page:number) {
 
-    if (searchStatus == '-1') {
-      searchStatus = ""
+    if (searchStatus === '-1') {
+      searchStatus = ''
     }
     let params = "?" + TEXT_PARAM + searchText + "&" + STATUS_PARAM + searchStatus;
     return this.http.get<PaginateModel>(BACK_END_URL + PROJECT_ENDPOINT + SEARCH + '/' + page + params).subscribe(response => {
@@ -112,6 +114,19 @@ export class DataStorageService {
     });
   }
 
+  searchProducts(criteria, page, size) {
+    if (criteria.productType === '-1' || criteria.productType === '') {
+      criteria.productType = null;
+    }
+    console.log(criteria);
+    return this.http.post<PaginateModel>(BACK_END_URL + PRODUCT_ENDPOINT + SEARCH + '/' + page + '/' + size, criteria).subscribe(response => {
+      this.productService.products = response.data;
+      this.paginateService.data = response;
+      this.triggerProductService.next();
+      this.triggerPagination.next();
+    });
+  }
+
   deleteProducts(id: number) {
     this.http.delete<ResponseMessage>(BACK_END_URL + PRODUCT_ENDPOINT + DELETE + "/" + id).subscribe(response => {
       this.productService.deleteProducts(id);
@@ -134,6 +149,15 @@ export class DataStorageService {
     this.http.put<ResponseMessage>(BACK_END_URL + PRODUCT_ENDPOINT + UPDATE, product).subscribe(response => {
       this.triggerProductService.next();
       this.triggerNavigate.next();
+    }, error => {
+      this.errorService.error = error.error;
+      this.triggerResponse.next(error.error);
+    });
+  }
+
+  getProductById(id: number) {
+    this.http.get<Product>(BACK_END_URL + PRODUCT_ENDPOINT + "/" + id).subscribe(product => {
+      this.triggerProductEntity.next(product);
     }, error => {
       this.errorService.error = error.error;
       this.triggerResponse.next(error.error);
@@ -170,7 +194,7 @@ export class DataStorageService {
 
   fetchAllEmployee(){
     this.http.get<Employee[]>(BACK_END_URL + PROJECT_ENDPOINT + "/get-employee").subscribe(employees=>{
-      this.employeeService.employees=employees;
+      this.employeeService.employees = employees;
       this.triggerEmployeeService.next();
     });
   }

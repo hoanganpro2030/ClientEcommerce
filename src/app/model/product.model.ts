@@ -1,3 +1,12 @@
+export enum ProductType {
+  FASHION = 'Fashion',
+  FOOD = 'Food',
+  ELEC = 'Electronic',
+  CONVE = 'Convenient',
+  TECH = 'Technical',
+  DRINK = 'Drink'
+}
+
 export interface Product {
   id: number;
   name: string;
@@ -7,4 +16,5 @@ export interface Product {
   image: string;
   dateStockIn: string;
   version: number;
+  productType: ProductType;
 }

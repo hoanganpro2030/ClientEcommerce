@@ -24,13 +24,27 @@ import { TagInputModule } from 'ngx-chips';
 import {EmployeeService} from "./services/employee.service";
 import {ProductService} from './services/product.service';
 import {ProductListComponent} from './body/content/product-list/product-list.component';
+import { ProductDetailComponent } from './body/content/product-detail/product-detail.component';
+import {MatCardModule} from '@angular/material/card';
+import {ProductSearchService} from './services/product-search.service';
+import { ShoppingCartComponent } from './body/content/shopping-cart/shopping-cart.component';
+import {ShoppingCartService} from './services/shopping-cart.service';
+import {MatDialogModule} from '@angular/material/dialog';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatButtonModule} from '@angular/material/button';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { PaymentInfoComponent } from './body/content/payment-info/payment-info.component';
+
 
 const appRoutes: Routes = [
-  {path: '', redirectTo: 'project-list', pathMatch: 'full'},
+  {path: '', redirectTo: 'product-list', pathMatch: 'full'},
   {path: 'project-list', component: ProjectListComponent},
   {path: 'project-form', component: ProjectFormComponent},
   {path: 'project-form/:id', component: ProjectFormComponent},
   {path: 'product-list', component: ProductListComponent},
+  {path: 'product-detail/:id', component: ProductDetailComponent},
+  {path: 'shopping-cart', component: ShoppingCartComponent},
+  {path: 'payment-info', component: PaymentInfoComponent},
   {path: 'error', component: ErrorPageComponent}
 ]
 
@@ -50,6 +64,9 @@ export function createTranslateLoader(http: HttpClient) {
     ProjectListComponent,
     ErrorPageComponent,
     ProductListComponent,
+    ProductDetailComponent,
+    ShoppingCartComponent,
+    PaymentInfoComponent,
   ],
   imports: [
     BrowserModule,
@@ -65,11 +82,15 @@ export function createTranslateLoader(http: HttpClient) {
         useFactory: (createTranslateLoader),
         deps: [HttpClient]
       }
-    })
-
+    }),
+    MatCardModule,
+    MatDialogModule,
+    BrowserAnimationsModule,
+    MatButtonModule,
+    MatButtonToggleModule
   ],
   providers: [ProjectService, GroupService, SearchService, DatePipe, ErrorService,
-              PaginateService, EmployeeService, ProductService],
+              PaginateService, EmployeeService, ProductService, ProductSearchService, ShoppingCartService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

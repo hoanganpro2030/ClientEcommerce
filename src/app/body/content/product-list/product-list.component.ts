@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
-import {Status} from '../../../model/project.model';
 import {ResponseMessage} from '../../../model/response.message';
 import {DataStorageService} from '../../../shared/data-storage.service';
-import {SearchService} from '../../../services/search.service';
 import {PaginateService} from '../../../services/paginate.service';
-import {Product} from '../../../model/product.model';
+import {Product, ProductType} from '../../../model/product.model';
 import {ProductService} from '../../../services/product.service';
 import {SIZE_PAGE_PRODUCT_LIST} from '../../../shared/constants';
+import {ProductSearchService} from '../../../services/product-search.service';
 
 @Component({
   selector: 'app-product-list',
@@ -17,22 +16,21 @@ import {SIZE_PAGE_PRODUCT_LIST} from '../../../shared/constants';
 export class ProductListComponent implements OnInit {
 
   searchFrom = new FormGroup({
-    searchText: new FormControl(this.searchService.text),
-    searchStatus: new FormControl(this.searchService.status)
-  })
+    name: new FormControl(this.productSearchService.criteria.name),
+    productType: new FormControl(this.productSearchService.criteria.productType)
+  });
   public products: Product[];
   public bagsProducts: Product[][];
-  public ps = Status;
+  public productTypes = ProductType;
   public response: ResponseMessage;
   public error = false;
   public totalPage;
   public currentPage;
-  public countCheck;
 
   constructor(private dataStorageService: DataStorageService,
-              private productService: ProductService,
-              private searchService: SearchService,
-              private paginateService: PaginateService) {
+              public productService: ProductService,
+              private productSearchService: ProductSearchService,
+              public paginateService: PaginateService) {
   }
 
   ngOnInit(): void {
@@ -76,14 +74,16 @@ export class ProductListComponent implements OnInit {
     });
   }
 
+  onSelect() {
+    console.log("aaaaa")
+  }
+
   onSubmit() {
-    if (this.searchFrom.value.searchText) {
-      this.searchService.text = this.searchFrom.value.searchText;
-    }
-    if (this.searchFrom.value.searchStatus !== '-1') {
-      this.searchService.status = this.searchFrom.value.searchStatus;
-    }
-    this.dataStorageService.searchProjects(this.searchFrom.value.searchText, this.searchFrom.value.searchStatus, 0);
+    this.productSearchService.criteria.name = this.searchFrom.value.name;
+    this.productSearchService.criteria.productType = this.searchFrom.value.productType;
+    console.log(this.searchFrom.value);
+    console.log(this.productSearchService.criteria);
+    this.dataStorageService.searchProducts(this.productSearchService.criteria, 0, SIZE_PAGE_PRODUCT_LIST);
   }
 
   // onDelete(id: number) {
@@ -97,13 +97,16 @@ export class ProductListComponent implements OnInit {
 
   onResetSearch() {
     this.dataStorageService.fetchAllProducts(0, SIZE_PAGE_PRODUCT_LIST);
-    this.searchService.text = '';
-    this.searchService.status = '-1';
+    this.productSearchService.criteria.name = '';
+    this.productSearchService.criteria.productType = '-1';
+    this.searchFrom.value.name = '';
+    this.searchFrom.value.productType = '-1';
   }
 
   onChangePage(page: number){
-    if (this.searchService.status && this.searchService.status !== '-1' || this.searchService.text) {
-      this.dataStorageService.searchProjects(this.searchService.text, this.searchService.status, page);
+    if (this.productSearchService.criteria.productType && this.productSearchService.criteria.productType !== '-1'
+      || this.productSearchService.criteria.name) {
+      this.dataStorageService.searchProducts(this.productSearchService.criteria, page, SIZE_PAGE_PRODUCT_LIST);
     }
     else{
       this.dataStorageService.fetchAllProducts(page, SIZE_PAGE_PRODUCT_LIST);
@@ -115,8 +118,9 @@ export class ProductListComponent implements OnInit {
     if (this.currentPage === 0){
       return;
     }
-    if (this.searchService.status && this.searchService.status !== '-1' || this.searchService.text) {
-      this.dataStorageService.searchProjects(this.searchService.text, this.searchService.status, this.currentPage - 1);
+    if (this.productSearchService.criteria.productType && this.productSearchService.criteria.productType !== '-1'
+      || this.productSearchService.criteria.name) {
+      this.dataStorageService.searchProducts(this.productSearchService.criteria, this.currentPage - 1, SIZE_PAGE_PRODUCT_LIST);
     }
     else{
       this.dataStorageService.fetchAllProducts(this.currentPage - 1, SIZE_PAGE_PRODUCT_LIST);
@@ -128,8 +132,9 @@ export class ProductListComponent implements OnInit {
     if (this.currentPage === this.totalPage - 1){
       return;
     }
-    if (this.searchService.status && this.searchService.status !== '-1' || this.searchService.text) {
-      this.dataStorageService.searchProjects(this.searchService.text, this.searchService.status, this.currentPage + 1);
+    if (this.productSearchService.criteria.productType && this.productSearchService.criteria.productType !== '-1'
+      || this.productSearchService.criteria.name) {
+      this.dataStorageService.searchProducts(this.productSearchService.criteria, this.currentPage + 1, SIZE_PAGE_PRODUCT_LIST);
     }
     else{
       this.dataStorageService.fetchAllProducts(this.currentPage + 1, SIZE_PAGE_PRODUCT_LIST);

@@ -1,0 +1,169 @@
+<div class="right-side">
+  <div class="col-sm-12 lable-top">
+    <span *ngIf="!projectId" class="">{{"project.title-new" | translate}}</span>
+    <span *ngIf="projectId" class="">{{"project.title-edit"|translate}}</span>
+  </div>
+
+  <div class="col-9 row">
+    <div class="col-sm-12 my-wrap-form ">
+
+      <form (ngSubmit)='onSubmit()' [formGroup]='projectForm' class="my-form">
+        <div *ngIf="hasError&&respone.statusCode===statusCode.PNOT_FOUND.code"
+             class="alert alert-danger alert-dismissible fade show col-12" role="alert">
+          {{"error.project-not-found"|translate}}<p *ngFor="let ms of respone.message" class="text">{{ms}}</p>
+          <button (click)="hasError=false" aria-label="Close" class="close" data-dismiss="alert" type="button">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div *ngIf="this.errorClient" class="alert alert-danger alert-dismissible fade show col-12" role="alert">
+          <p class="text">{{"error.enter-null-field" | translate}}</p>
+          <button (click)="errorClient=false" aria-label="Close" class="close" data-dismiss="alert" type="button">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <hr>
+        <div class="row my-form-group">
+          <div class="col-sm-3">
+            <label class="label-required">{{"project.number"|translate}}</label>
+          </div>
+          <div class="col-sm-3">
+            <input [ngClass]="{'invalid-input' : respone && respone.statusCode===statusCode.PNUM_EXISTED.code ||
+                                                 isSubmit===true && projectForm.controls['projectNumber']['status']==='INVALID'}"
+                   autofocus
+                   class="form-control"
+                   formControlName="projectNumber"
+                   type="number">
+          </div>
+
+          <div *ngIf="respone && respone.statusCode===statusCode.PNUM_EXISTED.code" class="col-sm-6">
+            <small class="error-text">{{'error.project-num-existed'|translate}}</small>
+          </div>
+        </div>
+
+        <div class="row my-form-group">
+          <div class="col-sm-3">
+            <label class="label-required">{{"project.name"|translate}}</label>
+          </div>
+          <div class="col-sm-9">
+            <input [ngClass]="{'invalid-input': isSubmit===true && projectForm.controls['name']['status']==='INVALID'}" class="form-control" formControlName="name"
+                   type="text">
+          </div>
+        </div>
+
+        <div class="row my-form-group">
+          <div class="col-sm-3">
+            <label class="label-required">{{"project.customer"|translate}}</label>
+          </div>
+          <div class="col-sm-9">
+            <input [ngClass]="{'invalid-input': isSubmit===true && projectForm.controls['customer']['status']==='INVALID'}" class="form-control" formControlName="customer"
+                   type="text">
+          </div>
+        </div>
+
+        <div class="row my-form-group">
+          <div class="col-sm-3">
+            <label class="label-required">{{"project.group"|translate}}</label>
+          </div>
+          <div class="col-sm-3">
+            <select [ngClass]="{'invalid-input': isSubmit===true && projectForm.controls['group']['status']==='INVALID'}" class="form-control" formControlName="group" name="group"
+                    required="">
+              <option disabled hidden selected value="-1">{{"NEW"|translate}}</option>
+              <option *ngFor="let group of groups" value="{{group.id}}">{{group.groupLeader.visa}}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row my-form-group">
+          <div class="col-sm-3">
+            <label>{{"project.members"|translate}}</label>
+          </div>
+          <div class="col-sm-9">
+            <!--            <input [ngClass]="{'invalid-input' : respone && respone.statusCode===statusCode.PEMP_INVAL.code}"-->
+            <!--                   class="form-control"-->
+            <!--                   formControlName="employees"-->
+            <!--                   type="text">-->
+            <div class="editor-tag" (click)="typing=!typing">
+              <span class="tag-item" *ngFor="let em of typedEmp">
+                    {{em.visa}}: {{em.firstName}} {{em.lastName}}
+                <span (click)="onRemoveEmpTyped(em.visa, em.firstName, em.lastName)" class="remove-tag">×</span>
+              </span>
+
+            </div>
+            <div class="col-12 wrap-option" *ngIf="typing">
+              <option (click)="typing=false; onSelectEmp(employee.visa, employee.firstName, employee.lastName)"
+                      class="emp-option"
+                      *ngFor="let employee of employees">{{employee.visa}}: {{employee.firstName}} {{employee.lastName}}</option>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="row">
+          <div *ngIf="respone && respone.statusCode===statusCode.PEMP_INVAL.code" class="col-sm-9 offset-3">
+            <small class="error-text">{{'error.project-emp-inval'|translate}} {{respone.message}}</small>
+          </div>
+        </div>
+
+        <div class="row my-form-group">
+          <div class="col-sm-3">
+            <label class="label-required">{{"project.status"|translate}}</label>
+          </div>
+          <div class="col-sm-3">
+            <select [ngClass]="{'invalid-input': isSubmit===true && projectForm.controls['status']['status']==='INVALID'}" class="form-control" formControlName="status"
+                    name="group">
+              <option *ngFor="let status of ps|keyvalue" [selected]='status.key=="NEW"'
+                      value="{{status.key}}">{{status.key|translate}}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row my-form-group">
+          <div class="col-sm-3">
+            <label class="label-required">{{"project.start-date"|translate}}</label>
+          </div>
+          <div class="col-sm-3">
+            <input [ngClass]="{'invalid-input': isSubmit===true && projectForm.controls['startDate']['status']==='INVALID'}" class="form-control" formControlName="startDate"
+                   type="date">
+          </div>
+          <div class="col-sm-3 pl-5">
+            <label>{{"project.end-date"|translate}}</label>
+          </div>
+          <div class="col-sm-3">
+            <input [ngClass]="{'invalid-input' : respone && respone.statusCode===statusCode.PENDD_INVAL.code}"
+                   class="form-control"
+                   formControlName="endDate"
+                   type="date">
+          </div>
+        </div>
+        <div class="row">
+          <div *ngIf="respone && respone.statusCode===statusCode.PENDD_INVAL.code" class="col-sm-9 offset-3">
+            <small class="error-text">{{'error.project-end-inval'|translate}}</small>
+          </div>
+        </div>
+        <hr>
+        <div class="row my-form-group">
+          <div class="col-sm-3 offset-6">
+            <a class="col-sm-12 btn btn-light btn-cancel"
+               routerLink="/project-list">{{"project.btn-cancel"|translate}}</a>
+          </div>
+          <div class="col-sm-3">
+            <button *ngIf="projectId" class="col-sm-12 btn btn-primary btn-create"
+                    type="submit">{{"project.btn-edit"|translate}}</button>
+
+            <button *ngIf="!projectId" class="col-sm-12 btn btn-primary btn-create"
+                    type="submit">{{"project.btn-create"|translate}}</button>
+          </div>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+
+</div>
+
+
+
+

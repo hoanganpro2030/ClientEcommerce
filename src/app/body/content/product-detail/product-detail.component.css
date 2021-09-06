@@ -1,0 +1,142 @@
+
+.product-list {
+  background-color: whitesmoke;
+  padding-top: 20px;
+  height: 100%;
+}
+
+.card {
+  background-color: #fff;
+  padding: 14px;
+  border: none
+}
+
+.demo {
+  width: 100%
+}
+
+ul {
+  list-style: none outside none;
+  padding-left: 0;
+  margin-bottom: 0
+}
+
+li {
+  display: block;
+  float: left;
+  margin-right: 6px;
+  cursor: pointer
+}
+
+.stars i {
+  color: #f6d151
+}
+
+.stars span {
+  font-size: 13px
+}
+
+hr {
+  color: #d4d4d4
+}
+
+.badge {
+  padding: 5px !important;
+  padding-bottom: 6px !important
+}
+
+.badge i {
+  font-size: 10px
+}
+
+.profile-image {
+  width: 35px
+}
+
+.comment-ratings i {
+  font-size: 13px
+}
+
+.username {
+  font-size: 12px
+}
+
+.comment-profile {
+  line-height: 17px
+}
+
+.date span {
+  font-size: 12px
+}
+
+.p-ratings i {
+  color: #f6d151;
+  font-size: 12px
+}
+
+.btn-long {
+  padding-left: 35px;
+  padding-right: 35px
+}
+
+.buttons {
+  margin-top: 15px
+}
+
+.buttons .btn {
+  height: 46px
+}
+
+.buttons .cart {
+  border-color: #76a8ff;
+  color: #ff7676
+}
+
+.buttons .cart:hover {
+  background-color: #e86464 !important;
+  color: #fff
+}
+
+.buttons .buy {
+  color: #fff;
+  background-color: #ff7676;
+  border-color: #ff7676
+}
+
+.buttons .buy:focus,
+.buy:active {
+  color: #fff;
+  background-color: #ff7676;
+  border-color: #ff7676;
+  box-shadow: none
+}
+
+.buttons .buy:hover {
+  color: #fff;
+  background-color: #e86464;
+  border-color: #e86464
+}
+
+.buttons .wishlist {
+  background-color: #fff;
+  border-color: #ff7676
+}
+
+.buttons .wishlist:hover {
+  background-color: #e86464;
+  border-color: #e86464;
+  color: #fff
+}
+
+.buttons .wishlist:hover i {
+  color: #fff
+}
+
+.buttons .wishlist i {
+  color: #ff7676
+}
+
+.comment-ratings i {
+  color: #f6d151
+}
+
