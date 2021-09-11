@@ -15,7 +15,7 @@
         <a (click)="onChangeEn()" [ngClass]="{'blue-text':language === 'fr'}">EN </a> <span class="text-primary">|</span>
         <a (click)="onChangeFr()" [ngClass]="{'blue-text':language === 'en'}"> FR</a>
       </div>
-      <div class="col-sm-3"><a class="menu-bar-link blue-text" href="#"> {{'header.help'|translate}} </a></div>
+      <div class="col-sm-3"><a class="menu-bar-link blue-text" href="#" routerLink="/shopping-cart">Cart</a></div>
       <div class="col-sm-4">
         <a class="menu-bar-link" href="#">{{'header.logout' | translate}}</a>
       </div>

@@ -1,0 +1,111 @@
+<div class="right-side">
+  <div class="col-sm-12 lable-top">
+    <span>Payment Information</span>
+  </div>
+
+  <div class="col-9 row">
+    <div class="col-sm-12 my-wrap-form ">
+
+      <form (ngSubmit)='onSubmit()' [formGroup]='infoForm' class="my-form">
+        <div *ngIf="hasError&&respone.statusCode===statusCode.QUANT_NOT_ENOUGH.code"
+             class="alert alert-danger alert-dismissible fade show col-12" role="alert">
+          <p>{{respone.data}} {{statusCode.QUANT_NOT_ENOUGH.english}}</p>
+          <button (click)="hasError=false" aria-label="Close" class="close" data-dismiss="alert" type="button">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div *ngIf="this.errorClient" class="alert alert-danger alert-dismissible fade show col-12" role="alert">
+          <p class="text">{{"error.enter-null-field" | translate}}</p>
+          <button (click)="errorClient=false" aria-label="Close" class="close" data-dismiss="alert" type="button">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <hr>
+
+        <div class="row my-form-group">
+          <div class="col-sm-3">
+            <label class="label-required">Full name</label>
+          </div>
+          <div class="col-sm-9">
+            <input [ngClass]="{'invalid-input': isSubmit===true && infoForm.controls['fullName']['status']==='INVALID'}" class="form-control" formControlName="fullName"
+                   type="text">
+          </div>
+        </div>
+
+        <div class="row my-form-group">
+          <div class="col-sm-3">
+            <label class="label-required">Phone number</label>
+          </div>
+          <div class="col-sm-3">
+            <input [ngClass]="{'invalid-input' : isSubmit===true && infoForm.controls['phoneNumber']['status']==='INVALID'}"
+                   class="form-control"
+                   formControlName="phoneNumber"
+                   type="text">
+          </div>
+        </div>
+
+        <div class="row my-form-group">
+          <div class="col-sm-3">
+            <label class="label-required">Address</label>
+          </div>
+          <div class="col-sm-9">
+            <input [ngClass]="{'invalid-input': isSubmit===true && infoForm.controls['address']['status']==='INVALID'}" class="form-control" formControlName="address"
+                   type="text">
+          </div>
+        </div>
+
+        <div class="row my-form-group">
+          <div class="col-sm-3">
+            <label class="label-required">Province</label>
+          </div>
+          <div class="col-sm-2">
+            <input [ngClass]="{'invalid-input': isSubmit===true && infoForm.controls['province']['status']==='INVALID'}" class="form-control" formControlName="province" name="group"
+                    type="text">
+          </div>
+          <div class="col-sm-2">
+            <label class="label-required">District</label>
+          </div>
+          <div class="col-sm-2">
+            <input [ngClass]="{'invalid-input': isSubmit===true && infoForm.controls['district']['status']==='INVALID'}" class="form-control" formControlName="district" name="group"
+                   type="text">
+          </div>
+          <div class="col-sm-2">
+            <label class="label-required">Ward</label>
+          </div>
+          <div class="col-sm-2">
+            <input [ngClass]="{'invalid-input': isSubmit===true && infoForm.controls['ward']['status']==='INVALID'}" class="form-control" formControlName="ward" name="group"
+                   type="text">
+          </div>
+        </div>
+
+        <div class="row my-form-group">
+          <div class="col-sm-3">
+            <label>Note</label>
+          </div>
+          <div class="col-sm-9">
+            <textarea [ngClass]="{'invalid-input': isSubmit===true && infoForm.controls['note']['status']==='INVALID'}" class="form-control" formControlName="note"
+                      name="group"></textarea>
+          </div>
+        </div>
+
+        <hr>
+        <div class="row my-form-group">
+          <div class="col-sm-3 offset-9">
+            <button class="col-sm-12 btn btn-primary btn-create"
+                    type="submit">Check out</button>
+
+          </div>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+
+</div>
+
+
+
+

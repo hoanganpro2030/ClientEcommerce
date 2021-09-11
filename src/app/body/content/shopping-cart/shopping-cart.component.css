@@ -1,0 +1,135 @@
+.project-list {
+  background-color: whitesmoke;
+  padding-top: 20px;
+  height: 100vh;
+}
+
+.my-form {
+  padding-top: 20px;
+}
+
+.lable-top {
+  font-size: 18pt;
+  color: #666666;
+  margin-left: 20px;
+}
+
+.table {
+  margin-top: 40px;
+  background-color: white;
+  border-collapse: collapse;
+}
+
+.special {
+  font-weight: 10;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+  border-left: 1px solid #ddd;
+  border-bottom: none;
+  border-top: none;
+}
+
+.table-checkbox {
+  width: 15px;
+  height: 15px;
+  padding-left: 10px;
+}
+
+.check-col {
+  width: 3%;
+}
+
+.num-col {
+  width: 20%;
+}
+
+.name-col {
+  width: 20%;
+}
+
+.status-col {
+  width: 10%;
+}
+
+.cus-col {
+  width: 12%;
+}
+
+.start-col {
+  width: 10%;
+}
+
+.del-col {
+  width: 5%;
+}
+
+.fa-trash-alt {
+  color: red;
+}
+
+.table-footer {
+  background-color: #ecf8f8;
+  border: #cfcfcf solid 1px;
+  color: #2F85FA;
+  font-weight: 500;
+}
+
+.table-footer span {
+  padding-right: 20px;
+  float: right;
+  color: red;
+  font-weight: 500;
+}
+
+.select:required:invalid {
+  color: #c1b7b7;
+}
+
+.option:not(:first-of-type) {
+  color: #454545;
+}
+
+.mybtn {
+  color: #2F85FA;
+  font-weight: 500;
+}
+
+.number-table {
+  text-align: right;
+}
+
+.text-table {
+  text-align: left;
+}
+
+.date-time {
+  text-align: center;
+}
+
+.text {
+  font-weight: 500;
+  color: #6f6f6f;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.input-ecm {
+  width: 40%;
+}
+
+.btn-ecm-modify-quant {
+  width: 30%;
+}

@@ -61,5 +61,21 @@ export const STATUS_CODE = {
     "Internal server error"),
   PDELETE_OK: new Message(
     "success.project.delete",
-    "OK")
+    "OK"),
+  NOT_FOUND: new Message(
+    "error.entity.not-found",
+    "Entity not found"
+  ),
+  DELETE_OK: new Message(
+    "success.entity.delete",
+    "OK"
+  ),
+  DELETE_NOT_FOUND: new Message(
+    "error.not-found.delete",
+    "Not found to delete"
+  ),
+  QUANT_NOT_ENOUGH: new Message(
+    "error.purchase-order.not-enough",
+    "Out of stock"
+  ),
 }

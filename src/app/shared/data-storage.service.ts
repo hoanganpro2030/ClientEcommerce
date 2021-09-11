@@ -14,8 +14,9 @@ import {
   SEARCH,
   STATUS_PARAM,
   TEXT_PARAM,
-  UPDATE
-} from "./constants";
+  UPDATE,
+  PRODUCT_ENDPOINT, ORDER_ENDPOINT
+} from './constants';
 import {ResponseMessage} from "../model/response.message";
 import {Group} from "../model/group.model";
 import {GroupService} from "../services/group.service";
@@ -24,6 +25,10 @@ import {PaginateModel} from "../model/paginate.model";
 import {PaginateService} from "../services/paginate.service";
 import {Employee} from "../model/employee.model";
 import {EmployeeService} from "../services/employee.service";
+import {ProductService} from '../services/product.service';
+import {Product} from '../model/product.model';
+import {PurchaseOrder} from '../model/purchase-order.model';
+import {ShoppingCartService} from '../services/shopping-cart.service';
 
 @Injectable({providedIn: 'root'})
 export class DataStorageService {
@@ -36,6 +41,8 @@ export class DataStorageService {
   public triggerBackToSearchProject: Subject<void> = new Subject<void>();
   public triggerErrorPage: Subject<any> = new Subject<any>();
   public triggerEmployeeService: Subject<any> = new Subject<any>();
+  public triggerProductService: Subject<any> = new Subject<any>();
+  public triggerProductEntity: Subject<Product> = new Subject<Product>();
   error: string;
 
   constructor(private http: HttpClient,
@@ -43,7 +50,9 @@ export class DataStorageService {
               private groupService: GroupService,
               private errorService: ErrorService,
               private paginateService: PaginateService,
-              private employeeService: EmployeeService) {
+              private employeeService: EmployeeService,
+              private productService: ProductService,
+              private cartService: ShoppingCartService) {
   }
 
   fetchAllProjects(page) {
@@ -58,8 +67,8 @@ export class DataStorageService {
 
   searchProjects(searchText: string, searchStatus: string, page:number) {
 
-    if (searchStatus == '-1') {
-      searchStatus = ""
+    if (searchStatus === '-1') {
+      searchStatus = ''
     }
     let params = "?" + TEXT_PARAM + searchText + "&" + STATUS_PARAM + searchStatus;
     return this.http.get<PaginateModel>(BACK_END_URL + PROJECT_ENDPOINT + SEARCH + '/' + page + params).subscribe(response => {
@@ -76,7 +85,7 @@ export class DataStorageService {
       this.triggerProjectService.next();
     }, error => {
       this.triggerResponse.next();
-    })
+    });
   }
 
   deleteMultiProject(ids: number[]) {
@@ -87,7 +96,7 @@ export class DataStorageService {
       this.triggerProjectService.next();
     }, error => {
       this.triggerResponse.next(error.error);
-    })
+    });
   }
 
   createNewProject(project) {
@@ -96,7 +105,66 @@ export class DataStorageService {
       this.triggerNavigate.next();
     }, error => {
       this.triggerResponse.next(error.error);
-    })
+    });
+  }
+
+  fetchAllProducts(page, size) {
+    return this.http.get<PaginateModel>(BACK_END_URL + PRODUCT_ENDPOINT + GET_ALL + "/" + page + "/" + size ).subscribe(response => {
+      this.productService.products = response.data;
+      this.paginateService.data = response;
+      this.triggerProductService.next();
+      this.triggerPagination.next();
+    });
+  }
+
+  searchProducts(criteria, page, size) {
+    if (criteria.productType === '-1' || criteria.productType === '') {
+      criteria.productType = null;
+    }
+    console.log(criteria);
+    return this.http.post<PaginateModel>(BACK_END_URL + PRODUCT_ENDPOINT + SEARCH + '/' + page + '/' + size, criteria).subscribe(response => {
+      this.productService.products = response.data;
+      this.paginateService.data = response;
+      this.triggerProductService.next();
+      this.triggerPagination.next();
+    });
+  }
+
+  deleteProducts(id: number) {
+    this.http.delete<ResponseMessage>(BACK_END_URL + PRODUCT_ENDPOINT + DELETE + "/" + id).subscribe(response => {
+      this.productService.deleteProducts(id);
+      this.triggerProductService.next();
+    }, error => {
+      this.triggerResponse.next();
+    });
+  }
+
+  createNewProduct(product) {
+    this.http.post<ResponseMessage>(BACK_END_URL + PRODUCT_ENDPOINT + CREATE, product).subscribe(response => {
+      this.triggerProductService.next();
+      this.triggerNavigate.next();
+    }, error => {
+      this.triggerResponse.next(error.error);
+    });
+  }
+
+  updateProduct(product) {
+    this.http.put<ResponseMessage>(BACK_END_URL + PRODUCT_ENDPOINT + UPDATE, product).subscribe(response => {
+      this.triggerProductService.next();
+      this.triggerNavigate.next();
+    }, error => {
+      this.errorService.error = error.error;
+      this.triggerResponse.next(error.error);
+    });
+  }
+
+  getProductById(id: number) {
+    this.http.get<Product>(BACK_END_URL + PRODUCT_ENDPOINT + "/" + id).subscribe(product => {
+      this.triggerProductEntity.next(product);
+    }, error => {
+      this.errorService.error = error.error;
+      this.triggerResponse.next(error.error);
+    });
   }
 
   fetchAllGroup() {
@@ -104,7 +172,18 @@ export class DataStorageService {
       this.groupService.group = groups.sort((a, b) => a.groupLeader.visa.localeCompare(b.groupLeader.visa));
       this.triggerGroupService.next(groups);
     }, error => {
-    })
+    });
+  }
+
+  createPurchaseOrder(order: PurchaseOrder): void {
+    this.http.post<ResponseMessage>(BACK_END_URL + ORDER_ENDPOINT + '/create', order).subscribe(response => {
+      this.triggerNavigate.next();
+      this.cartService.clearCart();
+    }, error => {
+      console.log(error);
+      this.errorService.error = error.error;
+      this.triggerResponse.next(error.error);
+    });
   }
 
   getGroupById(id: number) {
@@ -113,7 +192,7 @@ export class DataStorageService {
     }, error => {
       this.errorService.error = error.error;
       this.triggerResponse.next(error.error);
-    })
+    });
   }
 
   updateProject(project) {
@@ -124,14 +203,14 @@ export class DataStorageService {
     }, error => {
       this.errorService.error = error.error;
       this.triggerResponse.next(error.error);
-    })
+    });
   }
 
   fetchAllEmployee(){
     this.http.get<Employee[]>(BACK_END_URL + PROJECT_ENDPOINT + "/get-employee").subscribe(employees=>{
-      this.employeeService.employees=employees;
+      this.employeeService.employees = employees;
       this.triggerEmployeeService.next();
-    })
+    });
   }
 
 

@@ -1,0 +1,66 @@
+<div class="project-list pl-5">
+  <div>
+    <span class="lable-top">My Shopping Cart</span>
+  </div>
+  <div *ngIf="error" class="alert alert-danger alert-dismissible fade show col-11" role="alert">
+    {{error}}
+    <button (click)="error=null" aria-label="Close" class="close" data-dismiss="alert" type="button">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="row">
+
+    <div class="col-sm-11">
+      <div *ngIf="productCarts.length === 0" class="mt-5 offset-5"> There is no item in your cart !</div>
+      <table *ngIf="productCarts.length > 0" class="table special">
+        <thead>
+        <tr>
+          <th class="text check-col"></th>
+          <th class="num-col text">Id</th>
+          <th class="name-col text">Name</th>
+          <th class="name-col text">Price</th>
+          <th class="start-col text">Type</th>
+          <th class="cus-col text">Quantity</th>
+          <th class="start-col text">Price All</th>
+          <th class="del-col text">{{"project-list.table.delete"|translate}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let productCart of productCarts">
+          <th class="date-time"><input (change)="productCart.isCheck = !productCart.isCheck ; onChangeCheckBox()"
+                                       class="table-checkbox" type="checkbox" value="" [checked]="productCart.isCheck"></th>
+          <th class="number-table text"><a class="text"
+                                           routerLink="/product-detail/{{productCart.product.id}}">{{productCart.product.id}}</a></th>
+          <th class="text">{{productCart.product.name}}</th>
+          <th class="text">{{productCart.product.price}} Đ</th>
+          <th class="text">{{productCart.product.productType}}</th>
+          <th class="text">
+            <button (click)="onDecreseQuantity(productCart)" class="btn-ecm-modify-quant"> - </button>
+            <input class="input-ecm" type="number" value="{{productCart.quantity}}" disabled>
+            <button (click)="onIncreseQuantity(productCart)" class="btn-ecm-modify-quant"> + </button>
+          </th>
+          <th class="date-time text">{{productCart.product.price*productCart.quantity}} Đ</th>
+          <th class="date-time"><a (click)="onDelete(productCart.product.id)"><i
+            class="fas fa-trash-alt"></i></a></th>
+
+        </tr>
+        </tbody>
+        <tr>
+          <td colspan="6"> Total price:</td>
+          <td colspan="1"> {{this.cartService.totalPrice}} Đ</td>
+        </tr>
+        <tr *ngIf="countCheck > 0" class="table-footer">
+          <td colspan="8">{{countCheck}} {{"project-list.table.count-check"|translate}}
+            <span>{{"project-list.table.del-sel"|translate}}  <a (click)="onDeleteMany()"><i
+              class="fas fa-trash-alt"></i></a></span></td>
+        </tr>
+        <button class="btn btn-danger" routerLink="/payment-info" routerLinkActive="d-selected">Pay</button>
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
+
+
