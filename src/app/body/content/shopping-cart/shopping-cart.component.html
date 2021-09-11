@@ -2,9 +2,9 @@
   <div>
     <span class="lable-top">My Shopping Cart</span>
   </div>
-  <div *ngIf="error===true" class="alert alert-danger alert-dismissible fade show col-11" role="alert">
-    {{"project-del-notnew"|translate}}
-    <button aria-label="Close" class="close" data-dismiss="alert" type="button">
+  <div *ngIf="error" class="alert alert-danger alert-dismissible fade show col-11" role="alert">
+    {{error}}
+    <button (click)="error=null" aria-label="Close" class="close" data-dismiss="alert" type="button">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>

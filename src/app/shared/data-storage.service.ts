@@ -15,8 +15,8 @@ import {
   STATUS_PARAM,
   TEXT_PARAM,
   UPDATE,
-  PRODUCT_ENDPOINT
-} from "./constants";
+  PRODUCT_ENDPOINT, ORDER_ENDPOINT
+} from './constants';
 import {ResponseMessage} from "../model/response.message";
 import {Group} from "../model/group.model";
 import {GroupService} from "../services/group.service";
@@ -27,6 +27,8 @@ import {Employee} from "../model/employee.model";
 import {EmployeeService} from "../services/employee.service";
 import {ProductService} from '../services/product.service';
 import {Product} from '../model/product.model';
+import {PurchaseOrder} from '../model/purchase-order.model';
+import {ShoppingCartService} from '../services/shopping-cart.service';
 
 @Injectable({providedIn: 'root'})
 export class DataStorageService {
@@ -49,7 +51,8 @@ export class DataStorageService {
               private errorService: ErrorService,
               private paginateService: PaginateService,
               private employeeService: EmployeeService,
-              private productService: ProductService) {
+              private productService: ProductService,
+              private cartService: ShoppingCartService) {
   }
 
   fetchAllProjects(page) {
@@ -169,6 +172,17 @@ export class DataStorageService {
       this.groupService.group = groups.sort((a, b) => a.groupLeader.visa.localeCompare(b.groupLeader.visa));
       this.triggerGroupService.next(groups);
     }, error => {
+    });
+  }
+
+  createPurchaseOrder(order: PurchaseOrder): void {
+    this.http.post<ResponseMessage>(BACK_END_URL + ORDER_ENDPOINT + '/create', order).subscribe(response => {
+      this.triggerNavigate.next();
+      this.cartService.clearCart();
+    }, error => {
+      console.log(error);
+      this.errorService.error = error.error;
+      this.triggerResponse.next(error.error);
     });
   }
 

@@ -73,5 +73,9 @@ export const STATUS_CODE = {
   DELETE_NOT_FOUND: new Message(
     "error.not-found.delete",
     "Not found to delete"
-  )
+  ),
+  QUANT_NOT_ENOUGH: new Message(
+    "error.purchase-order.not-enough",
+    "Out of stock"
+  ),
 }

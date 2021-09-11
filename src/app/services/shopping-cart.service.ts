@@ -55,4 +55,9 @@ export class ShoppingCartService {
     }
     this.updateTotalPrice();
   }
+
+  clearCart(): void {
+    this.productCarts = [];
+    this.totalPrice = 0;
+  }
 }

@@ -27,7 +27,7 @@ export class ShoppingCartComponent implements OnInit {
   public productCarts: SingleCart[];
   public ps = Status;
   public response: ResponseMessage;
-  public error = false;
+  public error: string;
   public totalPage;
   public currentPage;
   public countCheck;
@@ -42,26 +42,14 @@ export class ShoppingCartComponent implements OnInit {
 
   ngOnInit(): void {
     this.productCarts = this.cartService.productCarts;
-    this.dataStorageService.triggerPagination.subscribe(rp=>{
+    this.dataStorageService.triggerPagination.subscribe(rp => {
       this.totalPage = this.paginateService.data.total;
       this.currentPage = this.paginateService.data.current;
-    })
-
-    this.projects = this.projectService.projects;
-
-    if(this.paginateService.data){
+    });
+    if (this.paginateService.data){
       this.totalPage = this.paginateService.data.total;
       this.currentPage = this.paginateService.data.current;
     }
-
-    this.dataStorageService.triggerProjectService.subscribe(next => {
-      this.projects = this.projectService.projects;
-    })
-
-    this.dataStorageService.triggerResponse.subscribe(response => {
-      this.response = response;
-      this.error = true;
-    });
     this.onChangeCheckBox();
   }
 
@@ -85,6 +73,10 @@ export class ShoppingCartComponent implements OnInit {
   }
 
   onIncreseQuantity(productCart: SingleCart) {
+    if (productCart.product.quantity === productCart.quantity) {
+      this.error = productCart.product.name + ' is out of stock.';
+      return;
+    }
     productCart.quantity += 1;
     this.cartService.updateTotalPrice();
   }

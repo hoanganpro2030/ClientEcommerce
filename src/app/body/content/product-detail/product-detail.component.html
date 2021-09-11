@@ -52,6 +52,13 @@
         <div>
           <button (click)="onDecreaseQuantity()" class="btn btn-info"> - </button><input type="number" [(ngModel)]="quantity"><button (click)="onIncreaseQuantity()" class="btn btn-info"> + </button>
         </div>
+        <div *ngIf="error"
+             class="alert alert-danger alert-dismissible fade show col-5" role="alert">
+          <p>{{error}}</p>
+          <button (click)="error=null" aria-label="Close" class="close" data-dismiss="alert" type="button">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
         <div class="buttons"> <button (click)="onAddtoCart()" class="btn btn-outline-warning btn-long cart">Add to Cart</button> <button (click)="onBuyNow()" class="btn btn-warning btn-long buy">Buy it Now</button> <button class="btn btn-light wishlist"> <i class="fa fa-heart"></i> </button> </div>
         <hr>
         <div class="product-description">

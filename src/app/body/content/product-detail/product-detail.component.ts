@@ -14,6 +14,7 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
 export class ProductDetailComponent implements OnInit {
   public productId = null;
   public quantity: number;
+  public error: string;
   public product: Product = {
     id: null,
     name: null,
@@ -57,6 +58,9 @@ export class ProductDetailComponent implements OnInit {
     if (this.quantity <= 0) {
       return;
     }
+    if (this.validateStockQuant() === false) {
+      return;
+    }
     let singleCart: SingleCart = {
       product: this.product,
       quantity: this.quantity,
@@ -70,12 +74,28 @@ export class ProductDetailComponent implements OnInit {
     if (this.quantity <= 0) {
       return;
     }
+    if (this.validateStockQuant() === false) {
+      return;
+    }
     let singleCart: SingleCart = {
       product: this.product,
       quantity: this.quantity,
       isCheck: false,
     };
     this.openDialog(singleCart);
+  }
+
+  private validateStockQuant(): boolean {
+    const productInCart = this.cartService.productCarts.find(c => c.product.id === this.product.id);
+    let quantityInCart = 0;
+    if (productInCart != null) {
+      quantityInCart = productInCart.quantity;
+    }
+    if (this.product.quantity < this.quantity + quantityInCart) {
+      this.error = 'Only have ' + (this.product.quantity - quantityInCart) + ' products of this kind';
+      return false;
+    }
+    return true;
   }
 
   openDialog(singleCart) {
