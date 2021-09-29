@@ -1,0 +1,147 @@
+.lable-top {
+  font-size: 18pt;
+  color: #666666;
+  margin-left: 20px;
+}
+
+span {
+  font-family: "Segoe UI";
+  font-weight: 500;
+  color: #666666;
+}
+
+label {
+  font-family: "Segoe UI";
+  font-weight: 500;
+  color: #666666;
+  font-size: 14pt;
+}
+
+.content {
+  padding-left: 40px;
+  background-color: whitesmoke;
+
+}
+
+.right-side {
+  height: 100vh;
+  background-color: whitesmoke;
+  padding: 20px;
+}
+
+.label-required:after {
+  content: "*";
+  color: red;
+  padding-left: 20px;
+}
+
+select {
+  padding-top: 3px;
+  font-size: 11pt;
+}
+
+.my-form-group {
+  margin-top: 38px;
+}
+
+.my-form {
+  margin-left: 60px;
+}
+
+.form-control {
+  height: 35px;
+}
+
+.my-wrap-form {
+  padding-bottom: 30px;
+  margin-left: 30px;
+}
+
+.btn-cancel {
+  boder-color: #454545;
+  font-weight: bold;
+  height: 35px;
+  background-color: white;
+}
+
+.btn-create {
+  border-color: #2F85FA;
+  font-weight: bold;
+  height: 35px;
+}
+
+hr {
+  border-color: #cfcfcf;
+}
+
+.ng-invalid.ng-touched.form-control {
+  border: red solid 1px;
+  box-shadow: red 0px 0px 4px;
+}
+
+.invalid-input {
+  border: red solid 1px;
+  box-shadow: red 0px 0px 4px;
+}
+
+.text {
+  font-weight: 500;
+}
+
+.error-text {
+  font-weight: 500;
+  color: #b07979;
+}
+
+.editor-tag {
+  min-height: 35px;
+  cursor: text;
+  font-size: 16px;
+  padding: 6px 0px 6px 6px;
+  border-radius: 5px;
+  background: white;
+  border: 0px #cccccc solid;
+}
+
+.tag-item {
+  line-height: 20px;
+  border-radius: 3px;
+  height: 20px;
+  font-size: 14px;
+  display: inline-block;
+  background-color: whitesmoke;
+  padding-left: 5px;
+  border: 1px #cccccc solid;
+}
+
+.remove-tag {
+  padding-right: 5px;
+  cursor: pointer;
+}
+.tag-item:not(:first-child) {
+  margin-left: 5px;
+}
+
+input {
+  margin: 0;
+  padding-left: 5px;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+}
+.wrap-option{
+  background-color: white;
+  border: #6f6f6f solid 1px;
+  border-radius: 0px 0px 5px 5px;
+  position: absolute;
+  z-index: 10;
+}
+.emp-option{
+  margin-top: 5px;
+  position: relative;
+}
+.emp-option:hover{
+  background-color: #007bff;
+  color: white;
+  position: relative;
+}

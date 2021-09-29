@@ -10,7 +10,7 @@ import {ProjectFormComponent} from './body/content/project-form/project-form.com
 import {ProjectListComponent} from './body/content/project-list/project-list.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {RouterModule, Routes} from "@angular/router";
-import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
 import {ProjectService} from "./services/project.service";
 import {GroupService} from "./services/group.service";
 import {ErrorPageComponent} from './body/error-page/error-page.component';
@@ -34,6 +34,11 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { PaymentInfoComponent } from './body/content/payment-info/payment-info.component';
+import {AuthenticationService} from './services/authentication.service';
+import {AuthInterceptor} from './interceptor/auth.interceptor';
+import {NotificationModule} from './notification.module';
+import {NotificationService} from './services/notification.service';
+import { LoginComponent } from './body/content/login/login.component';
 
 
 const appRoutes: Routes = [
@@ -45,6 +50,7 @@ const appRoutes: Routes = [
   {path: 'product-detail/:id', component: ProductDetailComponent},
   {path: 'shopping-cart', component: ShoppingCartComponent},
   {path: 'payment-info', component: PaymentInfoComponent},
+  {path: 'login', component: LoginComponent},
   {path: 'error', component: ErrorPageComponent}
 ]
 
@@ -67,6 +73,7 @@ export function createTranslateLoader(http: HttpClient) {
     ProductDetailComponent,
     ShoppingCartComponent,
     PaymentInfoComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
@@ -87,10 +94,15 @@ export function createTranslateLoader(http: HttpClient) {
     MatDialogModule,
     BrowserAnimationsModule,
     MatButtonModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    NotificationModule
   ],
   providers: [ProjectService, GroupService, SearchService, DatePipe, ErrorService,
-              PaginateService, EmployeeService, ProductService, ProductSearchService, ShoppingCartService],
+              PaginateService, EmployeeService, ProductService, ProductSearchService,
+              ShoppingCartService, AuthenticationService, NotificationService,
+    {
+      provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true
+    }],
   bootstrap: [AppComponent]
 })
 export class AppModule {
