@@ -39,20 +39,25 @@ import {AuthInterceptor} from './interceptor/auth.interceptor';
 import {NotificationModule} from './notification.module';
 import {NotificationService} from './services/notification.service';
 import { LoginComponent } from './body/content/login/login.component';
+import { RegisterComponent } from './body/content/register/register.component';
+import {AuthenticationGuard} from './guard/authentication.guard';
+import { VerifyComponent } from './body/content/verify/verify.component';
 
 
 const appRoutes: Routes = [
   {path: '', redirectTo: 'product-list', pathMatch: 'full'},
-  {path: 'project-list', component: ProjectListComponent},
-  {path: 'project-form', component: ProjectFormComponent},
-  {path: 'project-form/:id', component: ProjectFormComponent},
+  {path: 'project-list', component: ProjectListComponent, canActivate: [AuthenticationGuard]},
+  {path: 'project-form', component: ProjectFormComponent, canActivate: [AuthenticationGuard]},
+  {path: 'project-form/:id', component: ProjectFormComponent, canActivate: [AuthenticationGuard]},
   {path: 'product-list', component: ProductListComponent},
   {path: 'product-detail/:id', component: ProductDetailComponent},
   {path: 'shopping-cart', component: ShoppingCartComponent},
   {path: 'payment-info', component: PaymentInfoComponent},
   {path: 'login', component: LoginComponent},
-  {path: 'error', component: ErrorPageComponent}
-]
+  {path: 'verify', component: VerifyComponent},
+  {path: 'register', component: RegisterComponent},
+  {path: 'error', component: ErrorPageComponent},
+];
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -74,6 +79,8 @@ export function createTranslateLoader(http: HttpClient) {
     ShoppingCartComponent,
     PaymentInfoComponent,
     LoginComponent,
+    RegisterComponent,
+    VerifyComponent,
   ],
   imports: [
     BrowserModule,

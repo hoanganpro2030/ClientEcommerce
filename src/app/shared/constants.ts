@@ -13,6 +13,7 @@ export const GROUP_ENDPOINT = "/group";
 export const UPDATE = "/update";
 export const USER = "/user";
 export const RESET_PASSWORD = "/resetpassword";
+export const VERIFY = '/verify';
 export const UPDATE_PROFILE_IMAGE = '/updateProfileImage';
 export const LOGIN = "/login";
 export const REGISTER = "/register";

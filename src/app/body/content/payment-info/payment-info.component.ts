@@ -39,11 +39,6 @@ export class PaymentInfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dataStorageService.triggerNavigate.subscribe(response => {
-      this.router.navigate(['/project-list']);
-      this.dataStorageService.fetchAllProjects(0);
-    });
-
     this.dataStorageService.triggerResponse.subscribe(response => {
       this.respone = response;
       this.hasError = true;

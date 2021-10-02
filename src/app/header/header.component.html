@@ -15,9 +15,12 @@
         <a (click)="onChangeEn()" [ngClass]="{'blue-text':language === 'fr'}">EN </a> <span class="text-primary">|</span>
         <a (click)="onChangeFr()" [ngClass]="{'blue-text':language === 'en'}"> FR</a>
       </div>
-      <div class="col-sm-3"><a class="menu-bar-link blue-text" href="#" routerLink="/shopping-cart">Cart</a></div>
-      <div class="col-sm-4">
-        <a class="menu-bar-link" href="#" routerLink="/login">Login</a>
+      <div class="col-sm-2"><a class="menu-bar-link blue-text" href="#" routerLink="/shopping-cart">Cart</a></div>
+      <div *ngIf="authenticationService.isLoggedIn()" class="col-sm-3"><a class="menu-bar-link blue-text" href="#">Welcome, {{authenticationService.getUserFromLocalCache().username}}</a></div>
+
+      <div class="col-sm-2">
+        <a *ngIf="!authenticationService.isLoggedIn()" class="menu-bar-link" href="#" routerLink="/login">Login</a>
+        <a *ngIf="authenticationService.isLoggedIn()" class="menu-bar-link" (click)="onLogout()">Logout</a>
       </div>
     </div>
   </div>

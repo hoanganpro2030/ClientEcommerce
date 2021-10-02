@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpEvent, HttpResponse} from '@angular/common/http';
 import {User} from '../model/user.model';
 import {Observable} from 'rxjs';
-import {BACK_END_URL, LOGIN, REGISTER, RESET_PASSWORD, UPDATE_PROFILE_IMAGE, USER} from '../shared/constants';
+import {BACK_END_URL, LOGIN, REGISTER, RESET_PASSWORD, UPDATE_PROFILE_IMAGE, USER, VERIFY} from '../shared/constants';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import {HttpResponseAcm} from '../model/http-response.model';
 
@@ -26,6 +26,10 @@ export class AuthenticationService {
 
   public resetPassword(email: string): Observable<HttpResponseAcm | HttpErrorResponse> {
     return this.http.get<HttpResponseAcm>(BACK_END_URL + USER + RESET_PASSWORD + '?email=' + email );
+  }
+
+  public verifyAccount(code: string, email: string): Observable<HttpResponseAcm | HttpErrorResponse> {
+    return this.http.get<HttpResponseAcm>(BACK_END_URL + USER + VERIFY + '?code=' + code + '&email=' + email );
   }
 
   public updateProfileImage(formData: FormData): Observable<HttpEvent<User> | HttpErrorResponse> {
@@ -53,7 +57,7 @@ export class AuthenticationService {
     localStorage.setItem('user', JSON.stringify(user));
   }
 
-  public getUserToLocalCache(): User {
+  public getUserFromLocalCache(): User {
     return JSON.parse(localStorage.getItem('user'));
   }
 
