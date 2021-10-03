@@ -42,7 +42,10 @@ import { LoginComponent } from './body/content/login/login.component';
 import { RegisterComponent } from './body/content/register/register.component';
 import {AuthenticationGuard} from './guard/authentication.guard';
 import { VerifyComponent } from './body/content/verify/verify.component';
-
+import {MatStepperModule} from '@angular/material/stepper';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatRippleModule} from '@angular/material/core';
+import {MatInputModule} from '@angular/material/input';
 
 const appRoutes: Routes = [
   {path: '', redirectTo: 'product-list', pathMatch: 'full'},
@@ -102,6 +105,10 @@ export function createTranslateLoader(http: HttpClient) {
     BrowserAnimationsModule,
     MatButtonModule,
     MatButtonToggleModule,
+    MatStepperModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatRippleModule,
     NotificationModule
   ],
   providers: [ProjectService, GroupService, SearchService, DatePipe, ErrorService,

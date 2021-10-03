@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {ProjectService} from "../services/project.service";
 import {Project} from "../model/project.model";
-import {Subject} from "rxjs";
+import {Observable, Subject} from 'rxjs';
 import {
   BACK_END_URL,
   CREATE,
@@ -197,15 +197,8 @@ export class DataStorageService {
     });
   }
 
-  createPurchaseOrder(order: PurchaseOrder): void {
-    this.http.post<ResponseMessage>(BACK_END_URL + ORDER_ENDPOINT + '/create', order).subscribe(response => {
-      this.triggerNavigate.next();
-      this.cartService.clearCart();
-    }, error => {
-      console.log(error);
-      this.errorService.error = error.error;
-      this.triggerResponse.next(error.error);
-    });
+  createPurchaseOrder(order: PurchaseOrder): Observable<ResponseMessage> {
+    return  this.http.post<ResponseMessage>(BACK_END_URL + ORDER_ENDPOINT + '/create', order);
   }
 
   getGroupById(id: number) {
