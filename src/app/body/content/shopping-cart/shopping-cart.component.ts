@@ -7,10 +7,8 @@ import {ProjectService} from '../../../services/project.service';
 import {SearchService} from '../../../services/search.service';
 import {PaginateService} from '../../../services/paginate.service';
 import {ShoppingCartService} from '../../../services/shopping-cart.service';
-import {Product} from '../../../model/product.model';
 import {SingleCart} from '../../../model/single-cart.model';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {DialogElementsExampleDialog} from '../product-detail/product-detail.component';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -42,6 +40,16 @@ export class ShoppingCartComponent implements OnInit {
 
   ngOnInit(): void {
     this.productCarts = this.cartService.productCarts;
+    console.log(this.productCarts.length);
+    if (this.productCarts.length === 0) {
+      const productCartsString = localStorage.getItem('productCarts');
+      console.log(productCartsString);
+      if (productCartsString) {
+        this.productCarts = JSON.parse(productCartsString);
+        this.cartService.productCarts = this.productCarts;
+        this.cartService.updateTotalPrice();
+      }
+    }
     this.dataStorageService.triggerPagination.subscribe(rp => {
       this.totalPage = this.paginateService.data.total;
       this.currentPage = this.paginateService.data.current;
