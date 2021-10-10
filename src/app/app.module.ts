@@ -10,7 +10,7 @@ import {ProjectFormComponent} from './body/content/project-form/project-form.com
 import {ProjectListComponent} from './body/content/project-list/project-list.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {RouterModule, Routes} from "@angular/router";
-import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
 import {ProjectService} from "./services/project.service";
 import {GroupService} from "./services/group.service";
 import {ErrorPageComponent} from './body/error-page/error-page.component';
@@ -34,19 +34,34 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { PaymentInfoComponent } from './body/content/payment-info/payment-info.component';
-
+import {AuthenticationService} from './services/authentication.service';
+import {AuthInterceptor} from './interceptor/auth.interceptor';
+import {NotificationModule} from './notification.module';
+import {NotificationService} from './services/notification.service';
+import { LoginComponent } from './body/content/login/login.component';
+import { RegisterComponent } from './body/content/register/register.component';
+import {AuthenticationGuard} from './guard/authentication.guard';
+import { VerifyComponent } from './body/content/verify/verify.component';
+import {MatStepperModule} from '@angular/material/stepper';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatRippleModule} from '@angular/material/core';
+import {MatInputModule} from '@angular/material/input';
+import {MatBadgeModule} from '@angular/material/badge';
 
 const appRoutes: Routes = [
   {path: '', redirectTo: 'product-list', pathMatch: 'full'},
-  {path: 'project-list', component: ProjectListComponent},
-  {path: 'project-form', component: ProjectFormComponent},
-  {path: 'project-form/:id', component: ProjectFormComponent},
+  {path: 'project-list', component: ProjectListComponent, canActivate: [AuthenticationGuard]},
+  {path: 'project-form', component: ProjectFormComponent, canActivate: [AuthenticationGuard]},
+  {path: 'project-form/:id', component: ProjectFormComponent, canActivate: [AuthenticationGuard]},
   {path: 'product-list', component: ProductListComponent},
   {path: 'product-detail/:id', component: ProductDetailComponent},
   {path: 'shopping-cart', component: ShoppingCartComponent},
   {path: 'payment-info', component: PaymentInfoComponent},
-  {path: 'error', component: ErrorPageComponent}
-]
+  {path: 'login', component: LoginComponent},
+  {path: 'verify', component: VerifyComponent},
+  {path: 'register', component: RegisterComponent},
+  {path: 'error', component: ErrorPageComponent},
+];
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -67,6 +82,9 @@ export function createTranslateLoader(http: HttpClient) {
     ProductDetailComponent,
     ShoppingCartComponent,
     PaymentInfoComponent,
+    LoginComponent,
+    RegisterComponent,
+    VerifyComponent,
   ],
   imports: [
     BrowserModule,
@@ -87,10 +105,20 @@ export function createTranslateLoader(http: HttpClient) {
     MatDialogModule,
     BrowserAnimationsModule,
     MatButtonModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatStepperModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatRippleModule,
+    MatBadgeModule,
+    NotificationModule
   ],
   providers: [ProjectService, GroupService, SearchService, DatePipe, ErrorService,
-              PaginateService, EmployeeService, ProductService, ProductSearchService, ShoppingCartService],
+              PaginateService, EmployeeService, ProductService, ProductSearchService,
+              ShoppingCartService, AuthenticationService, NotificationService,
+    {
+      provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true
+    }],
   bootstrap: [AppComponent]
 })
 export class AppModule {

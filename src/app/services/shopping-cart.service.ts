@@ -27,6 +27,7 @@ export class ShoppingCartService {
     this.productCarts.forEach(pd => {
       this.totalPrice += pd.quantity * pd.product.price;
     });
+    localStorage.setItem('productCarts', JSON.stringify(this._productCarts));
   }
 
   deleteProducts(id: number) {
@@ -59,5 +60,6 @@ export class ShoppingCartService {
   clearCart(): void {
     this.productCarts = [];
     this.totalPrice = 0;
+    localStorage.removeItem('productCarts');
   }
 }

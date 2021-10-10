@@ -48,22 +48,7 @@ export class ProductListComponent implements OnInit {
 
     this.dataStorageService.triggerProductService.subscribe(next => {
       this.products = this.productService.products;
-      let arr = [];
-      let i = 0;
-      this.productService.bagProduct = [];
-      const NUMPERLINE = 3;
-      this.products.forEach(p => {
-        arr.push(p);
-        i++;
-        if (i % NUMPERLINE === 0){
-          this.productService.bagProduct.push(arr);
-          arr = [];
-          i = 0;
-        }
-      });
-      if (i % NUMPERLINE !== 0){
-        this.productService.bagProduct.push(arr);
-      }
+      this.productService.bagProduct = this.dataStorageService.handleDisplayBagProducts(this.products);
       this.bagsProducts = this.productService.bagProduct;
       console.log(this.bagsProducts);
     });

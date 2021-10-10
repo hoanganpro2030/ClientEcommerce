@@ -1,0 +1,107 @@
+<div class="right-side">
+  <div class="col-sm-12 lable-top">
+    <span>Login</span>
+  </div>
+
+  <div class="col-9 row">
+    <div class="col-sm-12 my-wrap-form ">
+
+      <form (ngSubmit)='onSubmit()' [formGroup]='registerForm' class="my-form">
+        <div *ngIf="hasError&&respone.statusCode===statusCode.QUANT_NOT_ENOUGH.code"
+             class="alert alert-danger alert-dismissible fade show col-12" role="alert">
+          <p>{{respone.data}} {{statusCode.QUANT_NOT_ENOUGH.english}}</p>
+          <button (click)="hasError=false" aria-label="Close" class="close" data-dismiss="alert" type="button">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div *ngIf="this.errorClient" class="alert alert-danger alert-dismissible fade show col-12" role="alert">
+          <p class="text">{{"error.enter-null-field" | translate}}</p>
+          <button (click)="errorClient=false" aria-label="Close" class="close" data-dismiss="alert" type="button">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <hr>
+
+        <div class="row my-form-group">
+          <div class="col-sm-3">
+            <label class="label-required">Username</label>
+          </div>
+          <div class="col-sm-3">
+            <input [ngClass]="{'invalid-input': isSubmit===true && registerForm.controls['username']['status']==='INVALID'}" class="form-control" formControlName="username"
+                   type="text">
+          </div>
+        </div>
+
+        <div class="row my-form-group">
+          <div class="col-sm-3">
+            <label class="label-required">Password</label>
+          </div>
+          <div class="col-sm-3">
+            <input [ngClass]="{'invalid-input' : isSubmit===true && registerForm.controls['password']['status']==='INVALID'}"
+                   class="form-control"
+                   formControlName="password"
+                   type="password">
+          </div>
+        </div>
+
+        <div class="row my-form-group">
+          <div class="col-sm-3">
+            <label class="label-required">Password Confirm</label>
+          </div>
+          <div class="col-sm-3">
+            <input [ngClass]="{'invalid-input' : isSubmit===true && registerForm.controls['passwordConfirm']['status']==='INVALID'}"
+                   class="form-control"
+                   formControlName="passwordConfirm"
+                   type="password">
+          </div>
+        </div>
+
+        <div class="row my-form-group">
+          <div class="col-sm-3">
+            <label class="label-required">Email</label>
+          </div>
+          <div class="col-sm-3">
+            <input [ngClass]="{'invalid-input' : isSubmit===true && registerForm.controls['email']['status']==='INVALID'}"
+                   class="form-control"
+                   formControlName="email"
+                   type="email">
+          </div>
+        </div>
+
+        <div class="row my-form-group">
+          <div class="col-sm-3">
+            <label class="label-required">Full name</label>
+          </div>
+          <div class="col-sm-3">
+            <input [ngClass]="{'invalid-input' : isSubmit===true && registerForm.controls['fullName']['status']==='INVALID'}"
+                   class="form-control"
+                   formControlName="fullName"
+                   type="text">
+          </div>
+        </div>
+        <hr>
+        <div class="row my-form-group">
+          <div class="col-sm-2 offset-3">
+            <button [disabled]="showLoading" class="col-sm-12 btn btn-primary btn-create"
+                    type="submit"><i *ngIf="showLoading" class="fas fa-spinner fa-spin"></i>&nbsp; Sign up</button>
+
+          </div>
+        </div>
+        <div class="row my-form-group">
+          <div class="col-sm-3 offset-3">
+            Already have an account ? <a href="#" routerLink="/login">Login</a>
+          </div>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+
+</div>
+
+
+
+

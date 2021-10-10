@@ -2,6 +2,7 @@
 /*html{*/
 /*  background-color: #f5f5f5;*/
 /*}*/
+@import "~angular-notifier/styles";
 body {
   overflow-x: hidden;
 }

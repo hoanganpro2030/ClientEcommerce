@@ -8,59 +8,172 @@
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  <div class="row">
+  <div *ngIf="productCarts.length === 0" class="mt-5 offset-5"> There is no item in your cart !</div>
+  <mat-horizontal-stepper linear #stepper class="col-11 mt-2" *ngIf="productCarts.length > 0">
+    <!-- #docregion editable -->
+    <mat-step [stepControl]="cartForm" [editable]="true">
+      <!-- #enddocregion editable -->
+        <!-- #docregion step-label -->
+      <ng-template matStepLabel>Shopping Cart</ng-template>
+      <!-- #enddocregion step-label -->
+<!--        <mat-form-field appearance="fill">-->
+<!--          <mat-label>Name</mat-label>-->
+<!--          <input matInput formControlName="firstCtrl" placeholder="Last name, First name" required>-->
+<!--        </mat-form-field>-->
+      <div class="row">
 
-    <div class="col-sm-11">
-      <div *ngIf="productCarts.length === 0" class="mt-5 offset-5"> There is no item in your cart !</div>
-      <table *ngIf="productCarts.length > 0" class="table special">
-        <thead>
-        <tr>
-          <th class="text check-col"></th>
-          <th class="num-col text">Id</th>
-          <th class="name-col text">Name</th>
-          <th class="name-col text">Price</th>
-          <th class="start-col text">Type</th>
-          <th class="cus-col text">Quantity</th>
-          <th class="start-col text">Price All</th>
-          <th class="del-col text">{{"project-list.table.delete"|translate}}</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let productCart of productCarts">
-          <th class="date-time"><input (change)="productCart.isCheck = !productCart.isCheck ; onChangeCheckBox()"
-                                       class="table-checkbox" type="checkbox" value="" [checked]="productCart.isCheck"></th>
-          <th class="number-table text"><a class="text"
-                                           routerLink="/product-detail/{{productCart.product.id}}">{{productCart.product.id}}</a></th>
-          <th class="text">{{productCart.product.name}}</th>
-          <th class="text">{{productCart.product.price}} Đ</th>
-          <th class="text">{{productCart.product.productType}}</th>
-          <th class="text">
-            <button (click)="onDecreseQuantity(productCart)" class="btn-ecm-modify-quant"> - </button>
-            <input class="input-ecm" type="number" value="{{productCart.quantity}}" disabled>
-            <button (click)="onIncreseQuantity(productCart)" class="btn-ecm-modify-quant"> + </button>
-          </th>
-          <th class="date-time text">{{productCart.product.price*productCart.quantity}} Đ</th>
-          <th class="date-time"><a (click)="onDelete(productCart.product.id)"><i
-            class="fas fa-trash-alt"></i></a></th>
+        <div class="col-sm-12">
+          <div *ngIf="productCarts.length === 0" class="mt-5 offset-5"> There is no item in your cart !</div>
+          <table *ngIf="productCarts.length > 0" class="table special">
+            <thead>
+            <tr>
+              <th class="text check-col"></th>
+              <th class="num-col text">Id</th>
+              <th class="name-col text">Name</th>
+              <th class="name-col text">Price</th>
+              <th class="start-col text">Type</th>
+              <th class="cus-col text">Quantity</th>
+              <th class="start-col text">Price All</th>
+              <th class="del-col text">{{"project-list.table.delete"|translate}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let productCart of productCarts">
+              <th class="date-time"><input (change)="productCart.isCheck = !productCart.isCheck ; onChangeCheckBox()"
+                                           class="table-checkbox" type="checkbox" value="" [checked]="productCart.isCheck"></th>
+              <th class="number-table text"><a class="text"
+                                               routerLink="/product-detail/{{productCart.product.id}}">{{productCart.product.id}}</a></th>
+              <th class="text">{{productCart.product.name}}</th>
+              <th class="text">{{productCart.product.price}} Đ</th>
+              <th class="text">{{productCart.product.productType}}</th>
+              <th class="text">
+                <button (click)="onDecreseQuantity(productCart)" class="btn-ecm-modify-quant"> - </button>
+                <input class="input-ecm" type="number" value="{{productCart.quantity}}" disabled>
+                <button (click)="onIncreseQuantity(productCart)" class="btn-ecm-modify-quant"> + </button>
+              </th>
+              <th class="date-time text">{{productCart.product.price*productCart.quantity}} Đ</th>
+              <th class="date-time"><a (click)="onDelete(productCart.product.id)"><i
+                class="fas fa-trash-alt"></i></a></th>
+            </tr>
+            </tbody>
+            <tr>
+              <td colspan="6"> Total price:</td>
+              <td colspan="1"> {{this.cartService.totalPrice}} Đ</td>
+            </tr>
+            <tr *ngIf="countCheck > 0" class="table-footer">
+              <td colspan="8">{{countCheck}} {{"project-list.table.count-check"|translate}}
+                <span>{{"project-list.table.del-sel"|translate}}  <a (click)="onDeleteMany()"><i
+                  class="fas fa-trash-alt"></i></a></span></td>
+            </tr>
+          </table>
 
-        </tr>
-        </tbody>
-        <tr>
-          <td colspan="6"> Total price:</td>
-          <td colspan="1"> {{this.cartService.totalPrice}} Đ</td>
-        </tr>
-        <tr *ngIf="countCheck > 0" class="table-footer">
-          <td colspan="8">{{countCheck}} {{"project-list.table.count-check"|translate}}
-            <span>{{"project-list.table.del-sel"|translate}}  <a (click)="onDeleteMany()"><i
-              class="fas fa-trash-alt"></i></a></span></td>
-        </tr>
-        <button class="btn btn-danger" routerLink="/payment-info" routerLinkActive="d-selected">Pay</button>
-      </table>
+        </div>
 
-    </div>
+      </div>
+      <div>
+        <button mat-button matStepperNext class="btn-block btn-success col-1">Order</button>
+      </div>
+    </mat-step>
+    <mat-step [stepControl]="infoForm" [editable]="true">
+      <form [formGroup]="infoForm">
+        <ng-template matStepLabel>Your Information</ng-template>
+        <mat-form-field appearance="fill" class="col-3 mt-2">
+          <mat-label>Full Name</mat-label>
+          <input matInput formControlName="fullName"
+                 required>
+        </mat-form-field>
 
-  </div>
+        <mat-form-field appearance="fill" class="col-3 offset-1">
+          <mat-label>Phone Number</mat-label>
+          <input matInput formControlName="phoneNumber"
+                 required>
+        </mat-form-field><br>
 
+        <mat-form-field appearance="fill" class="col-3">
+          <mat-label>Province</mat-label>
+          <input matInput formControlName="province"
+                 required>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="col-3 offset-1">
+          <mat-label>District</mat-label>
+          <input matInput formControlName="district"
+                 required>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="col-3 offset-1">
+          <mat-label>Ward</mat-label>
+          <input matInput formControlName="ward"
+                 required>
+        </mat-form-field><br>
+
+        <mat-form-field appearance="fill" class="col-11">
+          <mat-label>Street</mat-label>
+          <input matInput formControlName="address" placeholder="ex: 231/58A, Duong Ba Trac"
+                 required>
+        </mat-form-field><br>
+
+        <mat-form-field appearance="fill" class="col-11">
+          <mat-label>Note</mat-label>
+          <input matInput formControlName="note" placeholder="ex: Ship at V-Building Tower">
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious class="btn-block btn-info col-1 mr-1">Back</button>
+          <button mat-button matStepperNext class="btn-block btn-success col-1" [disabled]="!infoForm.valid">Next</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Confirm Order</ng-template>
+      <h3><b>Your Order</b></h3>
+      <div class="row">
+        <div class="col-12">Name: {{this.infoForm.controls.fullName.value}}</div>
+        <div class="col-12">Address: {{this.infoForm.controls.address.value}}, {{this.infoForm.controls.ward.value}}, {{this.infoForm.controls.district.value}}, {{this.infoForm.controls.province.value}}</div>
+        <div class="col-12">Phone number: {{this.infoForm.controls.phoneNumber.value}}</div>
+        <div class="col-12">Note: {{this.infoForm.controls.note.value !== '' ? this.infoForm.controls.note.value : 'None'}}</div>
+      </div>
+      &nbsp;
+      <h3>Items:</h3>
+      <div class="row">
+        <div class="col-sm-12">
+          <div *ngIf="productCarts.length === 0" class="offset-5"> There is no item in your cart !</div>
+          <table *ngIf="productCarts.length > 0" class="table special">
+            <thead>
+            <tr>
+              <th class="num-col text">Id</th>
+              <th class="name-col text">Name</th>
+              <th class="name-col text">Price</th>
+              <th class="start-col text">Type</th>
+              <th class="cus-col text">Quantity</th>
+              <th class="start-col text">Price All</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let productCart of productCarts">
+              <th class="number-table text"><a class="text"
+                                               routerLink="/product-detail/{{productCart.product.id}}">{{productCart.product.id}}</a></th>
+              <th class="text">{{productCart.product.name}}</th>
+              <th class="text">{{productCart.product.price}} Đ</th>
+              <th class="text">{{productCart.product.productType}}</th>
+              <th class="text">{{productCart.quantity}}</th>
+              <th class="date-time text">{{productCart.product.price*productCart.quantity}} Đ</th>
+            </tr>
+            </tbody>
+            <tr>
+              <td colspan="5"> Total price:</td>
+              <td colspan="1"> {{this.cartService.totalPrice}} Đ</td>
+            </tr>
+          </table>
+
+        </div>
+      </div>
+
+      <div>
+        <button mat-button matStepperPrevious class="btn-block btn-info col-1 mr-1">Back</button>
+        <button class="btn btn-danger" (click)="onOrder()" routerLinkActive="d-selected">Confirm Order</button>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>
 </div>
 
 

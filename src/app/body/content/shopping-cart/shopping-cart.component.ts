@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Project, Status} from '../../../model/project.model';
 import {ResponseMessage} from '../../../model/response.message';
 import {DataStorageService} from '../../../shared/data-storage.service';
@@ -7,10 +7,14 @@ import {ProjectService} from '../../../services/project.service';
 import {SearchService} from '../../../services/search.service';
 import {PaginateService} from '../../../services/paginate.service';
 import {ShoppingCartService} from '../../../services/shopping-cart.service';
-import {Product} from '../../../model/product.model';
 import {SingleCart} from '../../../model/single-cart.model';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {DialogElementsExampleDialog} from '../product-detail/product-detail.component';
+import {ProductsOrder} from '../../../model/products-order.model';
+import {PurchaseOrder} from '../../../model/purchase-order.model';
+import {StatusOrder} from '../../../enum/status-order';
+import {NotificationService} from '../../../services/notification.service';
+import {NotificationType} from '../../../enum/notification-type.enum';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -19,29 +23,52 @@ import {DialogElementsExampleDialog} from '../product-detail/product-detail.comp
 })
 export class ShoppingCartComponent implements OnInit {
 
-  searchFrom = new FormGroup({
-    searchText: new FormControl(this.searchService.text),
-    searchStatus: new FormControl(this.searchService.status)
-  })
-  public projects: Project[];
+  cartForm: FormGroup;
+  infoForm: FormGroup;
   public productCarts: SingleCart[];
-  public ps = Status;
   public response: ResponseMessage;
   public error: string;
   public totalPage;
   public currentPage;
   public countCheck;
+  public isSubmit = false;
+  public po: PurchaseOrder;
 
   constructor(private dataStorageService: DataStorageService,
               private projectService: ProjectService,
               private searchService: SearchService,
               private paginateService: PaginateService,
               public cartService: ShoppingCartService,
-              public dialog: MatDialog) {
+              public dialog: MatDialog,
+              private _formBuilder: FormBuilder,
+              private notificationService: NotificationService,
+              private router: Router) {
   }
 
   ngOnInit(): void {
+    this.cartForm = this._formBuilder.group({
+      // firstCtrl: ['', Validators.required]
+    });
+    this.infoForm = new FormGroup({
+      fullName: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+      phoneNumber: new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$'),
+        Validators.maxLength(10), Validators.minLength(7)]),
+      address: new FormControl('', [Validators.required, Validators.maxLength(255)]),
+      province: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+      district: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+      ward: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+      note: new FormControl('')
+    });
+
     this.productCarts = this.cartService.productCarts;
+    if (this.productCarts.length === 0) {
+      const productCartsString = localStorage.getItem('productCarts');
+      if (productCartsString) {
+        this.productCarts = JSON.parse(productCartsString);
+        this.cartService.productCarts = this.productCarts;
+        this.cartService.updateTotalPrice();
+      }
+    }
     this.dataStorageService.triggerPagination.subscribe(rp => {
       this.totalPage = this.paginateService.data.total;
       this.currentPage = this.paginateService.data.current;
@@ -53,14 +80,39 @@ export class ShoppingCartComponent implements OnInit {
     this.onChangeCheckBox();
   }
 
-  onSubmit() {
-    if (this.searchFrom.value.searchText) {
-      this.searchService.text = this.searchFrom.value.searchText;
-    }
-    if (this.searchFrom.value.searchStatus != '-1') {
-      this.searchService.status = this.searchFrom.value.searchStatus;
-    }
-    this.dataStorageService.searchProjects(this.searchFrom.value.searchText, this.searchFrom.value.searchStatus, 0);
+  onOrder(): void {
+    this.isSubmit = true;
+    const formValue = this.infoForm.value;
+    const detail: ProductsOrder[] = [];
+    this.cartService.productCarts.forEach(pd => {
+      const productOrder: ProductsOrder = {
+        productId: pd.product.id,
+        quantity: pd.quantity
+      };
+      detail.push(productOrder);
+    });
+    this.po = {
+      id: null,
+      fullName: formValue.fullName,
+      phoneNumber: formValue.phoneNumber,
+      addressDetail: formValue.address,
+      province: formValue.province,
+      district: formValue.district,
+      ward: formValue.ward,
+      note: formValue.note,
+      totalPrice: this.cartService.totalPrice,
+      detail: JSON.stringify(detail),
+      orderDate: null,
+      status: StatusOrder.NEW,
+      version: null
+    };
+    this.dataStorageService.createPurchaseOrder(this.po).subscribe(response => {
+      this.cartService.clearCart();
+      this.productCarts = this.cartService.productCarts;
+      this.notificationService.notify(NotificationType.SUCCESS, 'Order success');
+    }, error => {
+      this.notificationService.notify(NotificationType.ERROR, error.error.message);
+    });
   }
 
   onDecreseQuantity(productCart: SingleCart) {

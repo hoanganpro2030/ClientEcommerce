@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {ProjectService} from "../services/project.service";
 import {Project} from "../model/project.model";
-import {Subject} from "rxjs";
+import {Observable, Subject} from 'rxjs';
 import {
   BACK_END_URL,
   CREATE,
@@ -111,10 +111,31 @@ export class DataStorageService {
   fetchAllProducts(page, size) {
     return this.http.get<PaginateModel>(BACK_END_URL + PRODUCT_ENDPOINT + GET_ALL + "/" + page + "/" + size ).subscribe(response => {
       this.productService.products = response.data;
+      this.productService.bagProduct = this.handleDisplayBagProducts(this.productService.products);
       this.paginateService.data = response;
       this.triggerProductService.next();
       this.triggerPagination.next();
     });
+  }
+
+  handleDisplayBagProducts(products: Product[]): Product[][] {
+    let arr = [];
+    let i = 0;
+    const bagProduct: Product[][] = [];
+    const NUMPERLINE = 3;
+    products.forEach(p => {
+      arr.push(p);
+      i++;
+      if (i % NUMPERLINE === 0){
+        bagProduct.push(arr);
+        arr = [];
+        i = 0;
+      }
+    });
+    if (i % NUMPERLINE !== 0){
+      bagProduct.push(arr);
+    }
+    return bagProduct;
   }
 
   searchProducts(criteria, page, size) {
@@ -122,7 +143,8 @@ export class DataStorageService {
       criteria.productType = null;
     }
     console.log(criteria);
-    return this.http.post<PaginateModel>(BACK_END_URL + PRODUCT_ENDPOINT + SEARCH + '/' + page + '/' + size, criteria).subscribe(response => {
+    return this.http.post<PaginateModel>(BACK_END_URL + PRODUCT_ENDPOINT + SEARCH + '/' + page + '/' + size, criteria)
+      .subscribe(response => {
       this.productService.products = response.data;
       this.paginateService.data = response;
       this.triggerProductService.next();
@@ -175,15 +197,8 @@ export class DataStorageService {
     });
   }
 
-  createPurchaseOrder(order: PurchaseOrder): void {
-    this.http.post<ResponseMessage>(BACK_END_URL + ORDER_ENDPOINT + '/create', order).subscribe(response => {
-      this.triggerNavigate.next();
-      this.cartService.clearCart();
-    }, error => {
-      console.log(error);
-      this.errorService.error = error.error;
-      this.triggerResponse.next(error.error);
-    });
+  createPurchaseOrder(order: PurchaseOrder): Observable<ResponseMessage> {
+    return  this.http.post<ResponseMessage>(BACK_END_URL + ORDER_ENDPOINT + '/create', order);
   }
 
   getGroupById(id: number) {
