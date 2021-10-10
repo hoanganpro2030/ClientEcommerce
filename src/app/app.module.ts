@@ -46,6 +46,7 @@ import {MatStepperModule} from '@angular/material/stepper';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatRippleModule} from '@angular/material/core';
 import {MatInputModule} from '@angular/material/input';
+import {MatBadgeModule} from '@angular/material/badge';
 
 const appRoutes: Routes = [
   {path: '', redirectTo: 'product-list', pathMatch: 'full'},
@@ -109,6 +110,7 @@ export function createTranslateLoader(http: HttpClient) {
     MatFormFieldModule,
     MatInputModule,
     MatRippleModule,
+    MatBadgeModule,
     NotificationModule
   ],
   providers: [ProjectService, GroupService, SearchService, DatePipe, ErrorService,

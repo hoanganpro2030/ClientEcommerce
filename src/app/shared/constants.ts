@@ -1,4 +1,4 @@
-export const BACK_END_URL = "http://127.0.0.1:8080";
+export const BACK_END_URL = "http://18.188.153.21:5000";
 export const PROJECT_ENDPOINT = "/project";
 export const PRODUCT_ENDPOINT = "/product";
 export const ORDER_ENDPOINT = "/purchase-order";
