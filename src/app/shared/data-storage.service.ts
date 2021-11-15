@@ -43,6 +43,7 @@ export class DataStorageService {
   public triggerEmployeeService: Subject<any> = new Subject<any>();
   public triggerProductService: Subject<any> = new Subject<any>();
   public triggerProductEntity: Subject<Product> = new Subject<Product>();
+  public triggerCartService: Subject<any> = new Subject<any>();
   error: string;
 
   constructor(private http: HttpClient,

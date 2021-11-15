@@ -109,6 +109,7 @@ export class ShoppingCartComponent implements OnInit {
     this.dataStorageService.createPurchaseOrder(this.po).subscribe(response => {
       this.cartService.clearCart();
       this.productCarts = this.cartService.productCarts;
+      this.dataStorageService.triggerCartService.next();
       this.notificationService.notify(NotificationType.SUCCESS, 'Order success');
     }, error => {
       this.notificationService.notify(NotificationType.ERROR, error.error.message);
@@ -152,6 +153,7 @@ export class ShoppingCartComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result === true) {
         this.cartService.deleteProducts(id);
+        this.dataStorageService.triggerCartService.next();
       }
     });
   }
@@ -162,6 +164,7 @@ export class ShoppingCartComponent implements OnInit {
       if (result === true) {
         this.cartService.deleteMultiProducts(ids);
         this.countCheck = 0;
+        this.dataStorageService.triggerCartService.next();
       }
     });
   }

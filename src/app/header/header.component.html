@@ -16,7 +16,7 @@
         <a (click)="onChangeFr()" [ngClass]="{'blue-text':language === 'en'}"> FR</a>
       </div>
       <div class="col-sm-2">
-        <a class="menu-bar-link blue-text" href="#" routerLink="/shopping-cart"><i class="fas fa-shopping-cart fa-2x" matBadge="5" matBadgeColor="warn"></i></a>
+        <a class="menu-bar-link blue-text" href="#" routerLink="/shopping-cart"><i *ngIf="this.quantityInCart > 0" class="fas fa-shopping-cart fa-2x" matBadge="{{this.quantityInCart}}" matBadgeColor="warn"></i></a>
       </div>
       <div *ngIf="authenticationService.isLoggedIn()" class="col-sm-3"><a class="menu-bar-link blue-text" href="#"><i class="fas fa-user fa-2x"></i> {{authenticationService.getUserFromLocalCache().username}}</a></div>
 

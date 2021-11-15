@@ -5,6 +5,7 @@ import {Product, ProductType} from '../../../model/product.model';
 import {ShoppingCartService} from '../../../services/shopping-cart.service';
 import {SingleCart} from '../../../model/single-cart.model';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-product-detail',
@@ -66,7 +67,9 @@ export class ProductDetailComponent implements OnInit {
       quantity: this.quantity,
       isCheck: false,
     };
+    debugger
     this.cartService.insertProduct(singleCart);
+    this.dataStorageService.triggerCartService.next();
     this.router.navigate(['/shopping-cart']);
   }
 
@@ -103,9 +106,11 @@ export class ProductDetailComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result === false) {
         this.cartService.insertProduct(singleCart);
+        this.dataStorageService.triggerCartService.next();
         this.router.navigate(['/product-list']);
       } else if (result === true) {
         this.cartService.insertProduct(singleCart);
+        this.dataStorageService.triggerCartService.next();
         this.router.navigate(['/shopping-cart']);
       } else {
         return;

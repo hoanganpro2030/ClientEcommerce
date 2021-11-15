@@ -2,7 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {TranslateService} from "@ngx-translate/core";
 import {AuthenticationService} from '../services/authentication.service';
 import {NotificationService} from '../services/notification.service';
+import {ShoppingCartService} from '../services/shopping-cart.service';
 import {NotificationType} from '../enum/notification-type.enum';
+import { SingleCart } from '../model/single-cart.model';
+import { DataStorageService } from '../shared/data-storage.service';
 
 @Component({
   selector: 'app-header',
@@ -13,10 +16,26 @@ export class HeaderComponent implements OnInit {
 
   language = 'en';
   public isLoggedin: boolean;
+  public quantityInCart: number;
   constructor(private translate: TranslateService, public authenticationService: AuthenticationService,
-              private notificationService: NotificationService) {}
+              private notificationService: NotificationService, private shoppingCartService: ShoppingCartService,
+              private dataStorageService: DataStorageService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.quantityInCart = this.shoppingCartService.productCarts.length;
+    this.dataStorageService.triggerCartService.subscribe(() =>{
+      this.quantityInCart = this.shoppingCartService.productCarts.length;
+    })
+    debugger
+    if (this.quantityInCart === 0) {
+      const productCartsString = localStorage.getItem('productCarts');
+      if (productCartsString) {
+        let productCarts: SingleCart[] = JSON.parse(productCartsString);
+        this.quantityInCart = productCarts.length;
+        this.shoppingCartService.productCarts = productCarts;
+      }
+    }
+  }
 
   onChangeEn(): void {
     this.translate.use('en');
