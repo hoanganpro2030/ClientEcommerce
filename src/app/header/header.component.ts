@@ -26,13 +26,13 @@ export class HeaderComponent implements OnInit {
     this.dataStorageService.triggerCartService.subscribe(() =>{
       this.quantityInCart = this.shoppingCartService.productCarts.length;
     })
-    debugger
     if (this.quantityInCart === 0) {
       const productCartsString = localStorage.getItem('productCarts');
       if (productCartsString) {
         let productCarts: SingleCart[] = JSON.parse(productCartsString);
         this.quantityInCart = productCarts.length;
         this.shoppingCartService.productCarts = productCarts;
+        this.shoppingCartService.updateTotalPrice();
       }
     }
   }

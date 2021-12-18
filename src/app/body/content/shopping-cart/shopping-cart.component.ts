@@ -15,6 +15,11 @@ import {StatusOrder} from '../../../enum/status-order';
 import {NotificationService} from '../../../services/notification.service';
 import {NotificationType} from '../../../enum/notification-type.enum';
 import {Router} from '@angular/router';
+import { AppComponent } from 'src/app/app.component';
+import { MatFormFieldControl } from '@angular/material/form-field';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { AddressService } from 'src/app/services/address.service';
+import { Address } from 'src/app/model/address.model';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -33,6 +38,8 @@ export class ShoppingCartComponent implements OnInit {
   public countCheck;
   public isSubmit = false;
   public po: PurchaseOrder;
+  public addresses: Address[];
+  public selectedAddress: Address = null;
 
   constructor(private dataStorageService: DataStorageService,
               private projectService: ProjectService,
@@ -42,7 +49,9 @@ export class ShoppingCartComponent implements OnInit {
               public dialog: MatDialog,
               private _formBuilder: FormBuilder,
               private notificationService: NotificationService,
-              private router: Router) {
+              private router: Router,
+              private addressService: AddressService,
+              private authenticationService: AuthenticationService) {
   }
 
   ngOnInit(): void {
@@ -50,15 +59,28 @@ export class ShoppingCartComponent implements OnInit {
       // firstCtrl: ['', Validators.required]
     });
     this.infoForm = new FormGroup({
+      sltAddress: new FormControl(''),
       fullName: new FormControl('', [Validators.required, Validators.maxLength(50)]),
       phoneNumber: new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$'),
         Validators.maxLength(10), Validators.minLength(7)]),
-      address: new FormControl('', [Validators.required, Validators.maxLength(255)]),
+      street: new FormControl('', [Validators.required, Validators.maxLength(255)]),
       province: new FormControl('', [Validators.required, Validators.maxLength(50)]),
       district: new FormControl('', [Validators.required, Validators.maxLength(50)]),
       ward: new FormControl('', [Validators.required, Validators.maxLength(50)]),
       note: new FormControl('')
     });
+
+    // this.infoForm = this._formBuilder.group({
+    //   sltAddress: ['', [Validators.maxLength(50)]],
+    //   fullName: ['', [Validators.required, Validators.maxLength(50)]],
+    //   phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]*$'),
+    //     Validators.maxLength(10), Validators.minLength(7)]],
+    //   address: ['', [Validators.required, Validators.maxLength(255)]],
+    //   province: ['', [Validators.required, Validators.maxLength(50)]],
+    //   district: ['', [Validators.required, Validators.maxLength(50)]],
+    //   ward: ['', [Validators.required, Validators.maxLength(50)]],
+    //   note: ['',[]]
+    // });
 
     this.productCarts = this.cartService.productCarts;
     if (this.productCarts.length === 0) {
@@ -78,6 +100,19 @@ export class ShoppingCartComponent implements OnInit {
       this.currentPage = this.paginateService.data.current;
     }
     this.onChangeCheckBox();
+
+    this.addresses = this.addressService.addresses;
+    if (this.authenticationService.getUserFromLocalCache()) {
+      this.dataStorageService.getAddressesFromUser(this.authenticationService.getUserFromLocalCache().id)
+    }
+    
+    this.dataStorageService.triggerAddressService.subscribe(rp => {
+      this.addresses = this.addressService.addresses;
+      if (this.selectedAddress) {
+        this.selectedAddress = this.addressService.findAddressById(this.selectedAddress.id);
+      }
+      console.log(this.selectedAddress)
+    })
   }
 
   onOrder(): void {
@@ -91,15 +126,21 @@ export class ShoppingCartComponent implements OnInit {
       };
       detail.push(productOrder);
     });
+    let noteCombine;
+    if (this.selectedAddress !== null) {
+      noteCombine = formValue.note + "\n" + this.selectedAddress.note;
+    } else {
+      noteCombine =formValue.note;
+    }
     this.po = {
       id: null,
       fullName: formValue.fullName,
       phoneNumber: formValue.phoneNumber,
-      addressDetail: formValue.address,
+      addressDetail: formValue.street,
       province: formValue.province,
       district: formValue.district,
       ward: formValue.ward,
-      note: formValue.note,
+      note: formValue.note + "\n" + this.selectedAddress.note,
       totalPrice: this.cartService.totalPrice,
       detail: JSON.stringify(detail),
       orderDate: null,
@@ -116,6 +157,15 @@ export class ShoppingCartComponent implements OnInit {
     });
   }
 
+  onSelectAddress($event) {
+    this.selectedAddress = $event.value;
+    this.infoForm.controls.phoneNumber.setValue(this.selectedAddress.phoneNumber);
+    this.infoForm.controls.province.setValue(this.selectedAddress.province);
+    this.infoForm.controls.district.setValue(this.selectedAddress.district);
+    this.infoForm.controls.ward.setValue(this.selectedAddress.ward);
+    this.infoForm.controls.street.setValue(this.selectedAddress.street);
+  }
+
   onDecreseQuantity(productCart: SingleCart) {
     if (productCart.quantity === 1) {
       this.onDelete(productCart.product.id);
@@ -123,6 +173,10 @@ export class ShoppingCartComponent implements OnInit {
       productCart.quantity -= 1;
       this.cartService.updateTotalPrice();
     }
+  }
+
+  onNewAddress(): void {
+    this.openNewAddressDialog();
   }
 
   onIncreseQuantity(productCart: SingleCart) {
@@ -169,6 +223,22 @@ export class ShoppingCartComponent implements OnInit {
     });
   }
 
+  openNewAddressDialog(): void {
+    const dialogRef = this.dialog.open(NewAddressDialog, {});
+
+    dialogRef.afterClosed().subscribe(result => {
+      
+    });
+  }
+
+  onEditAddress(address: Address): void {
+    const dialogRef = this.dialog.open(NewAddressDialog, {data: address});
+
+    dialogRef.afterClosed().subscribe(result => {
+      
+    });
+  }
+
 }
 
 @Component({
@@ -190,6 +260,73 @@ export class ConfirmDeleteCartItemDialog {
   }
   onNo(): void {
     console.log(this.isDeleteMulti);
+    this.dialogRef.close(false);
+  }
+}
+
+@Component({
+  selector: 'new-address-dialog',
+  templateUrl: 'new-address-dialog.html',
+  styleUrls: ['./shopping-cart.component.css']
+})
+export class NewAddressDialog implements OnInit {
+  constructor(
+    public dialogRef: MatDialogRef<NewAddressDialog>, 
+    private dataStorageService: DataStorageService, 
+    private authenticationService: AuthenticationService,
+    @Inject(MAT_DIALOG_DATA) public address: Address
+  ) {}
+
+  ngOnInit(): void {
+    if (this.address != null) {
+      this.addressForm = new FormGroup({
+        title: new FormControl(this.address.title, [Validators.required, Validators.maxLength(50)]),
+        phoneNumber: new FormControl(this.address.phoneNumber, [Validators.required, Validators.pattern('^[0-9]*$'),
+            Validators.maxLength(10), Validators.minLength(7)]),
+        province: new FormControl(this.address.province, [Validators.required, Validators.maxLength(50)]),
+        district: new FormControl(this.address.district, [Validators.required, Validators.maxLength(50)]),
+        ward: new FormControl(this.address.ward, [Validators.required, Validators.maxLength(50)]),
+        street: new FormControl(this.address.street, [Validators.required, Validators.maxLength(255)]),
+        note: new FormControl(this.address.note),
+        isDefault: new FormControl(this.address.isDefault)
+      })
+      this.isUpdate = true;
+    }
+  }
+
+  isSubmit: boolean = false;
+  isUpdate: boolean = false;
+  addressForm = new FormGroup({
+    title: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+    phoneNumber: new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$'),
+        Validators.maxLength(10), Validators.minLength(7)]),
+    province: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+    district: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+    ward: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+    street: new FormControl('', [Validators.required, Validators.maxLength(255)]),
+    note: new FormControl(''),
+    isDefault: new FormControl(false)
+  })
+
+  onSubmit(): void {
+    this.isSubmit = true;
+    if (this.addressForm.valid) {
+      if (this.isUpdate === false) {
+        this.dataStorageService.createNewAddress(this.addressForm.value)
+      } else {
+        let addressUpdate: Address = this.addressForm.value;
+        addressUpdate['id'] = this.address.id;
+        this.dataStorageService.updateAddress(this.addressForm.value)
+      }
+      
+      this.dialogRef.close(true);
+    }
+  }
+
+  onYes(): void {
+    this.dialogRef.close(true);
+  }
+  onNo(): void {
     this.dialogRef.close(false);
   }
 }
