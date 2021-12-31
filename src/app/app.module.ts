@@ -49,6 +49,11 @@ import {MatInputModule} from '@angular/material/input';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatSelectModule} from '@angular/material/select';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
+import { UserProfileComponent } from './body/content/user-profile/user-profile.component';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 const appRoutes: Routes = [
   {path: '', redirectTo: 'product-list', pathMatch: 'full'},
@@ -62,6 +67,7 @@ const appRoutes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'verify', component: VerifyComponent},
   {path: 'register', component: RegisterComponent},
+  {path: 'user-profile', component: UserProfileComponent, canActivate: [AuthenticationGuard]},
   {path: 'error', component: ErrorPageComponent},
 ];
 
@@ -88,6 +94,7 @@ export function createTranslateLoader(http: HttpClient) {
     RegisterComponent,
     VerifyComponent,
     NewAddressDialog,
+    UserProfileComponent,
   ],
   imports: [
     BrowserModule,
@@ -114,7 +121,11 @@ export function createTranslateLoader(http: HttpClient) {
     MatRippleModule,
     MatBadgeModule,
     NotificationModule,
-    MatSelectModule
+    MatSelectModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatMenuModule,
+    MatExpansionModule
   ],
   providers: [ProjectService, GroupService, SearchService, DatePipe, ErrorService,
               PaginateService, EmployeeService, ProductService, ProductSearchService,

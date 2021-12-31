@@ -7,6 +7,20 @@
   padding-left: 100px;
 }
 
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.mat-badge-content {
+  width: auto;
+  display: grid;
+  min-width: 19px;
+  min-height: 15px;
+  text-align: center;
+  align-items: center;
+  font-size: 8px;
+}
+
 .logo {
   width: 100px;
   padding: 20px;

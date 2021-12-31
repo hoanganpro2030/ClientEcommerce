@@ -15,7 +15,7 @@ import {
   STATUS_PARAM,
   TEXT_PARAM,
   UPDATE,
-  PRODUCT_ENDPOINT, ORDER_ENDPOINT, USER, ADD_ADDRESS, GET_ADDRESSES, UPDATE_ADDRESS
+  PRODUCT_ENDPOINT, ORDER_ENDPOINT, USER, ADD_ADDRESS, GET_ADDRESSES, UPDATE_ADDRESS, ADDRESS, ADD
 } from './constants';
 import {ResponseMessage} from "../model/response.message";
 import {Group} from "../model/group.model";
@@ -189,28 +189,40 @@ export class DataStorageService {
 
   createNewAddress(address: Address) {
     let uid = this.authenticationService.getUserFromLocalCache().id;
-    return this.http.post<ResponseMessage>(BACK_END_URL + USER + ADD_ADDRESS + "/" + uid, address).subscribe(response => {
+    return this.http.post<ResponseMessage>(BACK_END_URL + USER + ADD + ADDRESS + "/" + uid, address).subscribe(response => {
       this.getAddressesFromUser(uid);
     }, error => {
-
+      console.log(error)
+      this.triggerAddressService.error(error)
     });
   }
 
   updateAddress(address: Address) {
     let uid = this.authenticationService.getUserFromLocalCache().id;
-    return this.http.put<ResponseMessage>(BACK_END_URL + USER + UPDATE_ADDRESS, address).subscribe(response => {
+    return this.http.put<ResponseMessage>(BACK_END_URL + USER + UPDATE + ADDRESS, address).subscribe(response => {
       this.getAddressesFromUser(uid);
     }, error => {
       console.log(error)
+      this.triggerAddressService.error(error)
+    });
+  }
+
+  deleteAddress(addressId: number) {
+    let uid = this.authenticationService.getUserFromLocalCache().id;
+    return this.http.delete<ResponseMessage>(BACK_END_URL + USER + DELETE + ADDRESS + "/" + addressId).subscribe(response => {
+      this.getAddressesFromUser(uid);
+    }, error => {
+      console.log(error)
+      this.triggerAddressService.error(error)
     });
   }
 
   getAddressesFromUser(userId) {
     return this.http.get<Address[]>(BACK_END_URL + USER + GET_ADDRESSES + "/" + userId).subscribe(response => {
       this.addressService.addresses = response;
-      this.triggerAddressService.next();
+      this.triggerAddressService.next(response);
     }, error => {
-      
+      this.triggerAddressService.thrownError(error);
     })
   }
 
