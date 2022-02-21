@@ -77,41 +77,62 @@
     <mat-step [stepControl]="infoForm" [editable]="true">
       <form [formGroup]="infoForm">
         <ng-template matStepLabel>Your Information</ng-template>
-        <mat-form-field appearance="fill" class="col-3 mt-2">
+        <div *ngIf="authenticationService.isLoggedIn()">
+          <mat-form-field *ngIf="addresses.length > 0" appearance="fill" class="col-4 mt-2">
+            <mat-label>Select Address</mat-label>
+            <mat-select (selectionChange)="onSelectAddress($event)" matInput formControlName="sltAddress">
+                <mat-option *ngFor="let address of addresses" [value]="address">{{address.title}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <a (click)="onNewAddress()" class="btn btn-success pointer"><i class="fas fa-plus"></i> New Address</a>
+          <br>
+  
+          <mat-card *ngIf="selectedAddress !== null" appearance="fill" class="col-5 ml-3" (click)="onEditAddress(selectedAddress)">
+            <mat-label>{{selectedAddress.title}}</mat-label>
+            <p>{{selectedAddress.province}}</p>
+            <p>{{selectedAddress.district}}</p>
+            <p>{{selectedAddress.ward}}</p>
+            <p>{{selectedAddress.street}}</p>
+            <p>{{selectedAddress.note}}</p>
+          </mat-card>
+        </div>
+        
+        <mat-form-field appearance="fill" class="col-4 mt-2">
           <mat-label>Full Name</mat-label>
           <input matInput formControlName="fullName"
                  required>
         </mat-form-field>
-
-        <mat-form-field appearance="fill" class="col-3 offset-1">
-          <mat-label>Phone Number</mat-label>
-          <input matInput formControlName="phoneNumber"
-                 required>
-        </mat-form-field><br>
-
-        <mat-form-field appearance="fill" class="col-3">
-          <mat-label>Province</mat-label>
-          <input matInput formControlName="province"
-                 required>
-        </mat-form-field>
-
-        <mat-form-field appearance="fill" class="col-3 offset-1">
-          <mat-label>District</mat-label>
-          <input matInput formControlName="district"
-                 required>
-        </mat-form-field>
-
-        <mat-form-field appearance="fill" class="col-3 offset-1">
-          <mat-label>Ward</mat-label>
-          <input matInput formControlName="ward"
-                 required>
-        </mat-form-field><br>
-
-        <mat-form-field appearance="fill" class="col-11">
-          <mat-label>Street</mat-label>
-          <input matInput formControlName="address" placeholder="ex: 231/58A, Duong Ba Trac"
-                 required>
-        </mat-form-field><br>
+        <div *ngIf="!authenticationService.isLoggedIn()">
+          <mat-form-field appearance="fill" class="col-4">
+            <mat-label>Phone Number</mat-label>
+            <input matInput formControlName="phoneNumber"
+                   required>
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill" class="col-4 offset-1">
+            <mat-label>Province</mat-label>
+            <input matInput formControlName="province"
+                   required>
+          </mat-form-field><br>
+  
+          <mat-form-field appearance="fill" class="col-4">
+            <mat-label>District</mat-label>
+            <input matInput formControlName="district"
+                   required>
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill" class="col-4 offset-1">
+            <mat-label>Ward</mat-label>
+            <input matInput formControlName="ward"
+                   required>
+          </mat-form-field><br>
+  
+          <mat-form-field appearance="fill" class="col-11">
+            <mat-label>Street</mat-label>
+            <input matInput formControlName="street" placeholder="ex: 231/58A, Duong Ba Trac"
+                   required>
+          </mat-form-field><br>
+        </div>
 
         <mat-form-field appearance="fill" class="col-11">
           <mat-label>Note</mat-label>
@@ -128,9 +149,14 @@
       <h3><b>Your Order</b></h3>
       <div class="row">
         <div class="col-12">Name: {{this.infoForm.controls.fullName.value}}</div>
-        <div class="col-12">Address: {{this.infoForm.controls.address.value}}, {{this.infoForm.controls.ward.value}}, {{this.infoForm.controls.district.value}}, {{this.infoForm.controls.province.value}}</div>
+        <div class="col-12">Address: {{this.infoForm.controls.street.value}}, {{this.infoForm.controls.ward.value}}, {{this.infoForm.controls.district.value}}, {{this.infoForm.controls.province.value}}</div>
         <div class="col-12">Phone number: {{this.infoForm.controls.phoneNumber.value}}</div>
-        <div class="col-12">Note: {{this.infoForm.controls.note.value !== '' ? this.infoForm.controls.note.value : 'None'}}</div>
+        <div class="col-12">
+          Note: 
+          <p>{{this.infoForm.controls.note.value !== '' ? this.infoForm.controls.note.value : ''}}</p>
+          <p>{{this.selectedAddress !== null ? this.selectedAddress.note : ''}}</p>
+
+        </div>
       </div>
       &nbsp;
       <h3>Items:</h3>

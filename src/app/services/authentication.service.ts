@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpEvent, HttpResponse} from '@angular/common/http';
 import {User} from '../model/user.model';
 import {Observable} from 'rxjs';
-import {BACK_END_URL, LOGIN, REGISTER, RESET_PASSWORD, UPDATE_PROFILE_IMAGE, USER, VERIFY} from '../shared/constants';
+import {BACK_END_URL, LOGIN, REGISTER, RESET_PASSWORD, UPDATE, UPDATE_PROFILE_IMAGE, USER, VERIFY} from '../shared/constants';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import {HttpResponseAcm} from '../model/http-response.model';
 
@@ -18,6 +18,14 @@ export class AuthenticationService {
 
   public login(user: User): Observable<HttpResponse<User>> {
     return this.http.post<User>(BACK_END_URL + USER + LOGIN, user, {observe: 'response'});
+  }
+
+  public getUser(userId: string): Observable<User> {
+    return this.http.get<User>(BACK_END_URL + USER + "/" + userId);
+  }
+
+  public updateUser(user): Observable<User> {
+    return this.http.put<User>(BACK_END_URL + USER + UPDATE, user);
   }
 
   public register(user: User): Observable<User> {

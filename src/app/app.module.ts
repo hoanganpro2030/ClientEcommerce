@@ -27,7 +27,7 @@ import {ProductListComponent} from './body/content/product-list/product-list.com
 import { ProductDetailComponent } from './body/content/product-detail/product-detail.component';
 import {MatCardModule} from '@angular/material/card';
 import {ProductSearchService} from './services/product-search.service';
-import { ShoppingCartComponent } from './body/content/shopping-cart/shopping-cart.component';
+import { NewAddressDialog, ShoppingCartComponent } from './body/content/shopping-cart/shopping-cart.component';
 import {ShoppingCartService} from './services/shopping-cart.service';
 import {MatDialogModule} from '@angular/material/dialog';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -47,6 +47,13 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatRippleModule} from '@angular/material/core';
 import {MatInputModule} from '@angular/material/input';
 import {MatBadgeModule} from '@angular/material/badge';
+import {MatSelectModule} from '@angular/material/select';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
+import { UserProfileComponent } from './body/content/user-profile/user-profile.component';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 const appRoutes: Routes = [
   {path: '', redirectTo: 'product-list', pathMatch: 'full'},
@@ -60,6 +67,7 @@ const appRoutes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'verify', component: VerifyComponent},
   {path: 'register', component: RegisterComponent},
+  {path: 'user-profile', component: UserProfileComponent, canActivate: [AuthenticationGuard]},
   {path: 'error', component: ErrorPageComponent},
 ];
 
@@ -85,13 +93,14 @@ export function createTranslateLoader(http: HttpClient) {
     LoginComponent,
     RegisterComponent,
     VerifyComponent,
+    NewAddressDialog,
+    UserProfileComponent,
   ],
   imports: [
     BrowserModule,
     RouterModule.forRoot(appRoutes),
     ReactiveFormsModule,
     FormsModule,
-    HttpClientModule,
     HttpClientModule,
     TagInputModule,
     TranslateModule.forRoot({
@@ -111,7 +120,12 @@ export function createTranslateLoader(http: HttpClient) {
     MatInputModule,
     MatRippleModule,
     MatBadgeModule,
-    NotificationModule
+    NotificationModule,
+    MatSelectModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatMenuModule,
+    MatExpansionModule
   ],
   providers: [ProjectService, GroupService, SearchService, DatePipe, ErrorService,
               PaginateService, EmployeeService, ProductService, ProductSearchService,
@@ -119,7 +133,7 @@ export function createTranslateLoader(http: HttpClient) {
     {
       provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true
     }],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {
 }

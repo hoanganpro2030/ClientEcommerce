@@ -1,31 +1,46 @@
 <div class="row header">
-  <div class="col-sm-8">
-    <div class="row">
-      <div class="col-sm-2">
-        <img class="logo" src="assets/img/logo_elca.png">
-      </div>
-      <div class="col-sm-8 brand-name">
-        <span class=""> {{'header.title'|translate}} </span>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-4 menu-link">
-    <div class="row">
-      <div class="col-sm-5">
-        <a (click)="onChangeEn()" [ngClass]="{'blue-text':language === 'fr'}">EN </a> <span class="text-primary">|</span>
-        <a (click)="onChangeFr()" [ngClass]="{'blue-text':language === 'en'}"> FR</a>
-      </div>
-      <div class="col-sm-2">
-        <a class="menu-bar-link blue-text" href="#" routerLink="/shopping-cart"><i class="fas fa-shopping-cart fa-2x" matBadge="5" matBadgeColor="warn"></i></a>
-      </div>
-      <div *ngIf="authenticationService.isLoggedIn()" class="col-sm-3"><a class="menu-bar-link blue-text" href="#"><i class="fas fa-user fa-2x"></i> {{authenticationService.getUserFromLocalCache().username}}</a></div>
+  <mat-toolbar>
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span>AN SHOP</span>
+    <span class="example-spacer"></span>
+    <!-- <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+      <mat-icon>favorite</mat-icon>
+    </button>
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+      <mat-icon>share</mat-icon>
+    </button> -->
+    <div class="col-sm-4">
+      <div class="row">
+        <div class="col-sm-5">
+          <a (click)="onChangeEn()" [ngClass]="{'blue-text':language === 'fr'}">EN </a> <span class="text-primary">|</span>
+          <a (click)="onChangeFr()" [ngClass]="{'blue-text':language === 'en'}"> FR</a>
+        </div>
+        <div class="col-sm-2">
+          <a class="menu-bar-link blue-text" href="#" routerLink="/shopping-cart"><i *ngIf="this.quantityInCart > 0" class="fas fa-shopping-cart fa-1" matBadge="{{this.quantityInCart}}" matBadgeColor="warn"></i></a>
+        </div>
+        <!-- <div *ngIf="authenticationService.isLoggedIn()" class="col-sm-3"><a class="menu-bar-link blue-text" href="#"><i class="fas fa-user fa-1"></i> {{authenticationService.getUserFromLocalCache().username}}</a></div> -->
+  
+        <!-- <div class="col-sm-2">
+          <a *ngIf="!authenticationService.isLoggedIn()" class="menu-bar-link blue-text" href="#" routerLink="/login"><i class="fas fa-sign-in-alt"></i> Login</a>
+          <a *ngIf="authenticationService.isLoggedIn()" class="menu-bar-link" (click)="onLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div> -->
+        <div *ngIf="authenticationService.isLoggedIn()">
+          <button mat-button [matMenuTriggerFor]="menu"><i class="fas fa-user fa-1"></i> {{authenticationService.getUserFromLocalCache().username}}</button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item routerLink="/user-profile">Profile</button>
+            <button mat-menu-item (click)="onLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+          </mat-menu>
+        </div>
 
-      <div class="col-sm-2">
-        <a *ngIf="!authenticationService.isLoggedIn()" class="menu-bar-link blue-text" href="#" routerLink="/login"><i class="fas fa-sign-in-alt"></i> Login</a>
-        <a *ngIf="authenticationService.isLoggedIn()" class="menu-bar-link" (click)="onLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        <div *ngIf="!authenticationService.isLoggedIn()" class="col-sm-2">
+          <a class="menu-bar-link blue-text" href="#" routerLink="/login"><i class="fas fa-sign-in-alt"></i> Login</a>
+        </div>
       </div>
     </div>
-  </div>
+  </mat-toolbar>
+  
 </div>
 
 

@@ -5,7 +5,7 @@
   </div>
 
   <div class="col-9 row">
-    <div class="col-sm-12 my-wrap-form ">
+    <div class="col-sm-12 my-wrap-form">
 
       <form (ngSubmit)='onSubmit()' [formGroup]='projectForm' class="my-form">
         <div *ngIf="hasError&&respone.statusCode===statusCode.PNOT_FOUND.code"

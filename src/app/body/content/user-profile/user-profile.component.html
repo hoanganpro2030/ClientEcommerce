@@ -1,0 +1,148 @@
+<div class="m-3 p-3">
+    <div class="row">
+      <mat-card class="col-md-3">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+              <h4 class="text-right">Profile Settings</h4>
+          </div>
+            <form [formGroup]="infoForm">
+              <p>
+                <mat-form-field appearance="fill" class="col-12 mt-2">
+                    <mat-label>Full Name</mat-label>
+                    <input matInput formControlName="fullName"
+                            required>
+                </mat-form-field>
+            </p>
+            <p>
+                <mat-form-field appearance="fill" class="col-12 mt-2">
+                    <mat-label>Email</mat-label>
+                    <input title="This field could not be change here" class="tooltips" readonly matInput formControlName="email">
+                </mat-form-field>
+            </p>
+            </form>
+          <button [disabled]="showLoadingSaveProfile" class="btn btn-primary" (click)="onSaveProfile()"><i *ngIf="showLoadingSaveProfile" class="fas fa-spinner fa-spin"></i>&nbsp; Save Profile</button>
+      </mat-card>
+        
+        <div class="col-md-9">
+            <mat-accordion [multi]="true">
+                <mat-expansion-panel *ngFor="let addressForm of addressForms">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      Address
+                    </mat-panel-title>
+                    <mat-panel-description>
+                      {{addressForm.controls['title']['value']}}
+                    </mat-panel-description>
+                  </mat-expansion-panel-header>
+                  <form [formGroup]="addressForm">
+                    <mat-form-field appearance="fill" class="col-11">
+                      <mat-label>Title</mat-label>
+                      <input matInput formControlName="title"
+                             required>
+                    </mat-form-field>
+                    <button class="btn btn-danger col-1" (click)="onDeleteAddress(addressForm.controls['id']['value'])">Delete</button>
+
+                    <mat-form-field appearance="fill" class="col-4">
+                      <mat-label>Phone Number</mat-label>
+                      <input matInput formControlName="phoneNumber"
+                             required>
+                    </mat-form-field>
+  
+                    <mat-form-field appearance="fill" class="col-4 offset-1">
+                      <mat-label>Province</mat-label>
+                      <input matInput formControlName="province"
+                             required>
+                    </mat-form-field><br>
+            
+                    <mat-form-field appearance="fill" class="col-4">
+                      <mat-label>District</mat-label>
+                      <input matInput formControlName="district"
+                             required>
+                    </mat-form-field>
+  
+            
+                    <mat-form-field appearance="fill" class="col-4 offset-1">
+                      <mat-label>Ward</mat-label>
+                      <input matInput formControlName="ward"
+                             required>
+                    </mat-form-field><br>
+            
+                    <mat-form-field appearance="fill" class="col-11">
+                      <mat-label>Street</mat-label>
+                      <input matInput formControlName="street"
+                             required>
+                    </mat-form-field><br>
+                    <div appearance="fill" class="pl-5 pt-3 pb-3">
+                      <input type="checkbox" class="form-check-input" id="exampleCheck1" formControlName="isDefault">
+                      <label class="form-check-label">Use as default address</label>
+                    </div><br>
+                    <mat-form-field appearance="fill" class="col-11">
+                      <mat-label>Note</mat-label>
+                      <input matInput formControlName="note">
+                    </mat-form-field><br>
+                    <button [disabled]="showLoadingSaveAddress" class="btn btn-primary col-1 offset-11" (click)="onUpdateAddress(addressForm)"><i *ngIf="showLoadingSaveAddress" class="fas fa-spinner fa-spin"></i>Save</button>
+                  </form>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;
+                    </mat-panel-title>
+                    <mat-panel-description class="pl-4">
+                      Add New Address
+                    </mat-panel-description>
+                  </mat-expansion-panel-header>
+                  <form [formGroup]="newAddressForm">
+                    <mat-form-field appearance="fill" class="col-11">
+                      <mat-label>Title</mat-label>
+                      <input matInput formControlName="title"
+                             required>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill" class="col-4">
+                      <mat-label>Phone Number</mat-label>
+                      <input matInput formControlName="phoneNumber"
+                             required>
+                    </mat-form-field>
+  
+                    <mat-form-field appearance="fill" class="col-4 offset-1">
+                      <mat-label>Province</mat-label>
+                      <input matInput formControlName="province"
+                             required>
+                    </mat-form-field><br>
+            
+                    <mat-form-field appearance="fill" class="col-4">
+                      <mat-label>District</mat-label>
+                      <input matInput formControlName="district"
+                             required>
+                    </mat-form-field>
+  
+            
+                    <mat-form-field appearance="fill" class="col-4 offset-1">
+                      <mat-label>Ward</mat-label>
+                      <input matInput formControlName="ward"
+                             required>
+                    </mat-form-field><br>
+            
+                    <mat-form-field appearance="fill" class="col-11">
+                      <mat-label>Street</mat-label>
+                      <input matInput formControlName="street"
+                             required>
+                    </mat-form-field><br>
+
+                    <div appearance="fill" class="pl-5 pt-3 pb-3">
+                      <input type="checkbox" class="form-check-input" id="exampleCheck1" formControlName="isDefault">
+                      <label class="form-check-label">Use as default address</label>
+                    </div><br>
+                    
+                    <mat-form-field appearance="fill" class="col-11">
+                      <mat-label>Note</mat-label>
+                      <input matInput formControlName="note">
+                    </mat-form-field><br>
+                    <button [disabled]="showLoadingSaveAddress" class="btn btn-primary col-1 offset-11" (click)="onAddNewAddress()"><i *ngIf="showLoadingSaveAddress" class="fas fa-spinner fa-spin"></i>Save</button>
+                  </form>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+    </div>
+</div>

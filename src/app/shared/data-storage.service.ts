@@ -15,7 +15,7 @@ import {
   STATUS_PARAM,
   TEXT_PARAM,
   UPDATE,
-  PRODUCT_ENDPOINT, ORDER_ENDPOINT
+  PRODUCT_ENDPOINT, ORDER_ENDPOINT, USER, ADD_ADDRESS, GET_ADDRESSES, UPDATE_ADDRESS, ADDRESS, ADD
 } from './constants';
 import {ResponseMessage} from "../model/response.message";
 import {Group} from "../model/group.model";
@@ -29,6 +29,9 @@ import {ProductService} from '../services/product.service';
 import {Product} from '../model/product.model';
 import {PurchaseOrder} from '../model/purchase-order.model';
 import {ShoppingCartService} from '../services/shopping-cart.service';
+import { Address } from "../model/address.model";
+import { AuthenticationService } from "../services/authentication.service";
+import { AddressService } from "../services/address.service";
 
 @Injectable({providedIn: 'root'})
 export class DataStorageService {
@@ -43,6 +46,8 @@ export class DataStorageService {
   public triggerEmployeeService: Subject<any> = new Subject<any>();
   public triggerProductService: Subject<any> = new Subject<any>();
   public triggerProductEntity: Subject<Product> = new Subject<Product>();
+  public triggerCartService: Subject<any> = new Subject<any>();
+  public triggerAddressService: Subject<any> = new Subject<any>();
   error: string;
 
   constructor(private http: HttpClient,
@@ -52,7 +57,9 @@ export class DataStorageService {
               private paginateService: PaginateService,
               private employeeService: EmployeeService,
               private productService: ProductService,
-              private cartService: ShoppingCartService) {
+              private cartService: ShoppingCartService,
+              private authenticationService: AuthenticationService,
+              private addressService: AddressService) {
   }
 
   fetchAllProjects(page) {
@@ -178,6 +185,45 @@ export class DataStorageService {
       this.errorService.error = error.error;
       this.triggerResponse.next(error.error);
     });
+  }
+
+  createNewAddress(address: Address) {
+    let uid = this.authenticationService.getUserFromLocalCache().id;
+    return this.http.post<ResponseMessage>(BACK_END_URL + USER + ADD + ADDRESS + "/" + uid, address).subscribe(response => {
+      this.getAddressesFromUser(uid);
+    }, error => {
+      console.log(error)
+      this.triggerAddressService.error(error)
+    });
+  }
+
+  updateAddress(address: Address) {
+    let uid = this.authenticationService.getUserFromLocalCache().id;
+    return this.http.put<ResponseMessage>(BACK_END_URL + USER + UPDATE + ADDRESS, address).subscribe(response => {
+      this.getAddressesFromUser(uid);
+    }, error => {
+      console.log(error)
+      this.triggerAddressService.error(error)
+    });
+  }
+
+  deleteAddress(addressId: number) {
+    let uid = this.authenticationService.getUserFromLocalCache().id;
+    return this.http.delete<ResponseMessage>(BACK_END_URL + USER + DELETE + ADDRESS + "/" + addressId).subscribe(response => {
+      this.getAddressesFromUser(uid);
+    }, error => {
+      console.log(error)
+      this.triggerAddressService.error(error)
+    });
+  }
+
+  getAddressesFromUser(userId) {
+    return this.http.get<Address[]>(BACK_END_URL + USER + GET_ADDRESSES + "/" + userId).subscribe(response => {
+      this.addressService.addresses = response;
+      this.triggerAddressService.next(response);
+    }, error => {
+      this.triggerAddressService.thrownError(error);
+    })
   }
 
   getProductById(id: number) {
