@@ -30,6 +30,7 @@
           <button mat-button [matMenuTriggerFor]="menu"><i class="fas fa-user fa-1"></i> {{authenticationService.getUserFromLocalCache().username}}</button>
           <mat-menu #menu="matMenu">
             <button mat-menu-item routerLink="/user-profile">Profile</button>
+            <button mat-menu-item routerLink="/orders">Orders</button>
             <button mat-menu-item (click)="onLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
           </mat-menu>
         </div>

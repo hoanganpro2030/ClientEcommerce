@@ -1,0 +1,16 @@
+<mat-card>
+    <div class="row" *ngIf="po != null">
+        <div class="col-3">
+            Date: {{po.orderDate}}
+        </div>
+        <div class="col-3 offset-2">
+            Total Price: {{po.totalPrice}} đ
+        </div>
+        <div class="col-2 offset-2">
+            Status: {{po.status}}
+        </div>
+    </div>
+    {{detail}}
+</mat-card>
+
+

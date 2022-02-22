@@ -54,6 +54,8 @@ import { MatIconModule } from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import { UserProfileComponent } from './body/content/user-profile/user-profile.component';
 import {MatExpansionModule} from '@angular/material/expansion';
+import { OrdersComponent } from './body/content/orders/orders.component';
+import { OrderDetailComponent } from './body/content/order-detail/order-detail.component';
 
 const appRoutes: Routes = [
   {path: '', redirectTo: 'product-list', pathMatch: 'full'},
@@ -68,6 +70,8 @@ const appRoutes: Routes = [
   {path: 'verify', component: VerifyComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'user-profile', component: UserProfileComponent, canActivate: [AuthenticationGuard]},
+  {path: 'orders', component: OrdersComponent, canActivate: [AuthenticationGuard]},
+  {path: 'order-detail/:id', component: OrderDetailComponent, canActivate: [AuthenticationGuard]},
   {path: 'error', component: ErrorPageComponent},
 ];
 
@@ -95,6 +99,8 @@ export function createTranslateLoader(http: HttpClient) {
     VerifyComponent,
     NewAddressDialog,
     UserProfileComponent,
+    OrdersComponent,
+    OrderDetailComponent,
   ],
   imports: [
     BrowserModule,

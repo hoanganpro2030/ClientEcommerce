@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {ProjectService} from "../services/project.service";
 import {Project} from "../model/project.model";
 import {Observable, Subject} from 'rxjs';
@@ -15,7 +15,7 @@ import {
   STATUS_PARAM,
   TEXT_PARAM,
   UPDATE,
-  PRODUCT_ENDPOINT, ORDER_ENDPOINT, USER, ADD_ADDRESS, GET_ADDRESSES, UPDATE_ADDRESS, ADDRESS, ADD
+  PRODUCT_ENDPOINT, ORDER_ENDPOINT, USER, ADD_ADDRESS, GET_ADDRESSES, UPDATE_ADDRESS, ADDRESS, ADD, GET, FIND_BY_ID
 } from './constants';
 import {ResponseMessage} from "../model/response.message";
 import {Group} from "../model/group.model";
@@ -235,6 +235,10 @@ export class DataStorageService {
     });
   }
 
+  getProductsByIds(ids: number[]): Observable<Product[] | HttpErrorResponse> {
+    return this.http.get<Product[]>(BACK_END_URL + PRODUCT_ENDPOINT + FIND_BY_ID + "/" + ids);
+  }
+
   fetchAllGroup() {
     this.http.get<Group[]>(BACK_END_URL + GROUP_ENDPOINT + GET_ALL).subscribe(groups => {
       this.groupService.group = groups.sort((a, b) => a.groupLeader.visa.localeCompare(b.groupLeader.visa));
@@ -244,7 +248,19 @@ export class DataStorageService {
   }
 
   createPurchaseOrder(order: PurchaseOrder): Observable<ResponseMessage> {
-    return  this.http.post<ResponseMessage>(BACK_END_URL + ORDER_ENDPOINT + '/create', order);
+    return this.http.post<ResponseMessage>(BACK_END_URL + ORDER_ENDPOINT + CREATE, order);
+  }
+
+  createPurchaseOrderForUser(order: PurchaseOrder, uid: string): Observable<ResponseMessage> {
+    return this.http.post<ResponseMessage>(BACK_END_URL + ORDER_ENDPOINT + CREATE + '/' + uid, order);
+  }
+
+  getPurchaseOrderForLoggedInUser(): Observable<PurchaseOrder[]> {
+    return this.http.get<PurchaseOrder[]>(BACK_END_URL + ORDER_ENDPOINT + GET + USER + '/' + this.authenticationService.getUserFromLocalCache().id);
+  }
+
+  getPurchaseOrderById(id: number): Observable<PurchaseOrder|HttpErrorResponse> {
+    return this.http.get<PurchaseOrder>(BACK_END_URL + ORDER_ENDPOINT + GET + '/' + id);
   }
 
   getGroupById(id: number) {

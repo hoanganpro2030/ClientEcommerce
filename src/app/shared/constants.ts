@@ -4,6 +4,8 @@ export const PROJECT_ENDPOINT = "/project";
 export const PRODUCT_ENDPOINT = "/product";
 export const ORDER_ENDPOINT = "/purchase-order";
 export const GET_ALL = "/list";
+export const GET = "/get";
+export const FIND_BY_ID = "/find-by-id";
 export const SEARCH = "/search";
 export const TEXT_PARAM = "searchText=";
 export const STATUS_PARAM = "searchStatus=";

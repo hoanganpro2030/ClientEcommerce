@@ -20,6 +20,7 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { AddressService } from 'src/app/services/address.service';
 import { Address } from 'src/app/model/address.model';
+import { error } from 'protractor';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -147,14 +148,27 @@ export class ShoppingCartComponent implements OnInit {
       status: StatusOrder.NEW,
       version: null
     };
-    this.dataStorageService.createPurchaseOrder(this.po).subscribe(response => {
-      this.cartService.clearCart();
-      this.productCarts = this.cartService.productCarts;
-      this.dataStorageService.triggerCartService.next();
-      this.notificationService.notify(NotificationType.SUCCESS, 'Order success');
-    }, error => {
-      this.notificationService.notify(NotificationType.ERROR, error.error.message);
-    });
+    console.log(this.authenticationService.isLoggedIn())
+    if (this.authenticationService.isLoggedIn()) {
+      this.dataStorageService.createPurchaseOrderForUser(this.po, this.authenticationService.getUserFromLocalCache().id).subscribe(response => {
+        this.cartService.clearCart();
+        this.productCarts = this.cartService.productCarts;
+        this.dataStorageService.triggerCartService.next();
+        this.notificationService.notify(NotificationType.SUCCESS, 'Order success');
+      }, error => {
+        this.notificationService.notify(NotificationType.ERROR, error.error.message);
+      })
+    } else {
+      this.dataStorageService.createPurchaseOrder(this.po).subscribe(response => {
+        this.cartService.clearCart();
+        this.productCarts = this.cartService.productCarts;
+        this.dataStorageService.triggerCartService.next();
+        this.notificationService.notify(NotificationType.SUCCESS, 'Order success');
+      }, error => {
+        this.notificationService.notify(NotificationType.ERROR, error.error.message);
+      });
+    }
+    
   }
 
   onSelectAddress($event) {
